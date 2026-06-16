@@ -1,7 +1,7 @@
 # Bootcamp Study Case 🌎 Backend API Ecosystem
 
 <p align="center">
-  <img src="./banner.png" alt="Backend API Ecosystem Banner" width="100%">
+  <img src="./banner-bcsc.png" alt="Backend API Ecosystem Banner" width="100%">
 </p>
 
 <p align="center">
