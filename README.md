@@ -22,7 +22,7 @@ Each application represents a different business domain while implementing commo
 
 | Application        | Description                              |
 | ------------------ | ---------------------------------------- |
-| ☕ Kings Brew       | Coffee Ordering Platform                 |
+| ☕ Kings Brew      | Coffee Ordering Platform                 |
 | 🥩 Castle Kitchen  | Steak & Restaurant Ordering Platform     |
 | 🏪 Trade Hub       | Ecommerce Marketplace                    |
 | 🏡 Medieval Airbnb | Hotel, Villa & Property Booking Platform |
@@ -36,7 +36,7 @@ Each application represents a different business domain while implementing commo
 | 🍔 Byte Burger     | Food Ordering Platform                |
 | 🛒 Quantum Mart    | Ecommerce Platform                    |
 | 🍍 Pineapple Stack | Community Forum & Discussion Platform |
-| 👨‍💼 M-ployee     | Employee Information System           |
+| 👨‍💼 M-ployee        | Employee Information System           |
 | 📚 Leather Shelf   | Library Management Platform           |
 | 📸 Codigram        | Social Media Platform                 |
 
@@ -44,27 +44,27 @@ Each application represents a different business domain while implementing commo
 
 ## 🧩 Shared Features
 
-* Authentication & Authorization
-* Role-Based Access Control (RBAC)
-* Product & Category Management
-* Search, Filtering & Pagination
-* Cart & Checkout
-* Order Management
-* Payment Workflow
-* History Tracking
-* Audit Logging
-* Swagger Documentation
+- Authentication & Authorization
+- Role-Based Access Control (RBAC)
+- Product & Category Management
+- Search, Filtering & Pagination
+- Cart & Checkout
+- Order Management
+- Payment Workflow
+- History Tracking
+- Audit Logging
+- Swagger Documentation
 
 ---
 
 ## 🏗️ Technology Stack
 
-* NestJS
-* PostgreSQL
-* Supabase
-* JWT Authentication
-* Swagger
-* Render
+- NestJS
+- PostgreSQL
+- Supabase
+- JWT Authentication
+- Swagger
+- Render
 
 ---
 
