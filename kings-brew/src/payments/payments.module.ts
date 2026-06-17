@@ -3,13 +3,13 @@ import { Module } from '@nestjs/common';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 
-@Module({
-  controllers: [
-    PaymentsController,
-  ],
+import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 
-  providers: [
-    PaymentsService,
-  ],
+@Module({
+  imports: [AuditLogsModule],
+
+  controllers: [PaymentsController],
+
+  providers: [PaymentsService],
 })
 export class PaymentsModule { }

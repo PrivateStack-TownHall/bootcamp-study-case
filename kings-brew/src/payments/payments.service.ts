@@ -13,11 +13,13 @@ import { PrismaService } from '../prisma/prisma.service';
 
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly auditLogsService: AuditLogsService,
   ) { }
 
   async create(
@@ -63,6 +65,18 @@ export class PaymentsService {
           order: true,
         },
       });
+
+    await this.auditLogsService.create({
+      userId: payment.order.userId,
+
+      action: 'CREATE_PAYMENT',
+
+      entity: 'Payment',
+
+      entityId: payment.id.toString(),
+
+      newData: payment,
+    });
 
     return {
       message:
@@ -212,8 +226,34 @@ export class PaymentsService {
           },
         },
       );
-    }
+      await this.auditLogsService.create({
+        userId: payment.order.userId,
 
+        action: 'PAYMENT_SUCCESS',
+
+        entity: 'Payment',
+
+        entityId: payment.id.toString(),
+
+        newData: updatedPayment,
+      });
+    }
+    if (
+      dto.status ===
+      PaymentStatus.FAILED
+    ) {
+      await this.auditLogsService.create({
+        userId: payment.order.userId,
+
+        action: 'PAYMENT_FAILED',
+
+        entity: 'Payment',
+
+        entityId: payment.id.toString(),
+
+        newData: updatedPayment,
+      });
+    }
     return {
       message:
         'Payment status updated successfully',

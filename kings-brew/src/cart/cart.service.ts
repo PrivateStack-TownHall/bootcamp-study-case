@@ -9,10 +9,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
+
 @Injectable()
 export class CartService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly auditLogsService: AuditLogsService,
   ) { }
 
   async create(
@@ -91,6 +94,14 @@ export class CartService {
           },
         },
       });
+
+    await this.auditLogsService.create({
+      userId,
+      action: 'ADD_TO_CART',
+      entity: 'CartItem',
+      entityId: cart.id.toString(),
+      newData: cart,
+    });
 
     return {
       message:
@@ -223,6 +234,13 @@ export class CartService {
         },
       });
 
+    await this.auditLogsService.create({
+      userId,
+      action: 'UPDATE_CART',
+      entity: 'CartItem',
+      entityId: updatedCart.id.toString(),
+      newData: updatedCart,
+    });
     return {
       message:
         'Cart updated successfully',
@@ -247,6 +265,18 @@ export class CartService {
         'Cart item not found',
       );
     }
+
+    await this.auditLogsService.create({
+      userId,
+
+      action: 'REMOVE_CART',
+
+      entity: 'CartItem',
+
+      entityId: cart.id.toString(),
+
+      oldData: cart,
+    });
 
     await this.prisma.cartItem.delete({
       where: {

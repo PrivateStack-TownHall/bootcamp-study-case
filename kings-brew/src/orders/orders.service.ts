@@ -12,11 +12,13 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly auditLogsService: AuditLogsService,
   ) { }
 
   async checkout(userId: number) {
@@ -120,6 +122,14 @@ export class OrdersService {
             where: {
               userId,
             },
+          });
+
+          await this.auditLogsService.create({
+            userId,
+            action: 'CHECKOUT',
+            entity: 'Order',
+            entityId: order.id.toString(),
+            newData: order,
           });
 
           return order;
@@ -231,6 +241,21 @@ export class OrdersService {
         },
       },
     );
+
+    await this.auditLogsService.create({
+      userId: order.userId,
+
+      action: 'UPDATE_ORDER_STATUS',
+
+      entity: 'Order',
+
+      entityId: id.toString(),
+
+      newData: {
+        status: dto.status,
+        notes: dto.notes,
+      },
+    });
 
     return {
       message:

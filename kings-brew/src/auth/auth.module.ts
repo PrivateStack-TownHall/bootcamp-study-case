@@ -3,14 +3,15 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 import { UsersModule } from '../users/users.module';
-
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 
 @Module({
   imports: [
     UsersModule,
+    AuditLogsModule,
 
     JwtModule.register({
       secret:
@@ -29,5 +30,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     AuthService,
     JwtStrategy,
   ],
+
+  exports: [AuthService],
 })
 export class AuthModule { }

@@ -11,12 +11,22 @@ export class AuditLogsService {
       private readonly prisma: PrismaService,
    ) { }
 
+   private readonly userSelect = {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+   };
+
    async findAll() {
       return {
          data:
             await this.prisma.auditLog.findMany({
                include: {
-                  user: true,
+                  user: {
+                     select:
+                        this.userSelect,
+                  },
                },
 
                orderBy: {
@@ -27,25 +37,28 @@ export class AuditLogsService {
    }
 
    async findOne(id: number) {
-      const log =
+      const auditLog =
          await this.prisma.auditLog.findUnique({
             where: {
                id,
             },
 
             include: {
-               user: true,
+               user: {
+                  select:
+                     this.userSelect,
+               },
             },
          });
 
-      if (!log) {
+      if (!auditLog) {
          throw new NotFoundException(
             'Audit log not found',
          );
       }
 
       return {
-         data: log,
+         data: auditLog,
       };
    }
 
@@ -60,7 +73,10 @@ export class AuditLogsService {
                },
 
                include: {
-                  user: true,
+                  user: {
+                     select:
+                        this.userSelect,
+                  },
                },
 
                orderBy: {

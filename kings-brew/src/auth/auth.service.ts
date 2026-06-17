@@ -7,17 +7,20 @@ import {
 
 import * as bcrypt from 'bcrypt';
 
+import { JwtService } from '@nestjs/jwt';
+
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
 import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 
 @Injectable()
 export class AuthService {
    constructor(
       private readonly usersService: UsersService,
       private readonly jwtService: JwtService,
+      private readonly auditLogsService: AuditLogsService
    ) { }
 
    async register(dto: RegisterDto) {
@@ -44,6 +47,16 @@ export class AuthService {
                password: hashedPassword,
             });
 
+         await this.auditLogsService.create({
+            userId: user.id,
+            action: 'REGISTER',
+            entity: 'User',
+            entityId: user.id.toString(),
+            newData: {
+               email: user.email,
+               fullName: user.fullName,
+            },
+         });
          return {
             message: 'Register success',
             data: {
@@ -107,6 +120,13 @@ export class AuthService {
             await this.jwtService.signAsync(
                payload,
             );
+
+         await this.auditLogsService.create({
+            userId: user.id,
+            action: 'LOGIN',
+            entity: 'User',
+            entityId: user.id.toString(),
+         });
 
          return {
             message: 'Login success',
