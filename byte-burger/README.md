@@ -1,98 +1,284 @@
-# 👑 Kings Brew
+# 🍔 Byte Burger API
 
 <p align="center">
-  <img src="./assets/banner.png" alt="Kings Brew Banner" />
+  <img src="./assets/banner.png" alt="Byte Burger API Banner" width="100%">
 </p>
 
 <p align="center">
-  <strong>Brew. Order. Deliver.</strong>
+  <strong>Fast Food Ordering Backend Service</strong>
 </p>
 
-Kings Brew is a modern coffee ordering platform created as a backend study case project to simulate a real-world coffee commerce ecosystem. The project focuses on implementing scalable backend architecture, authentication, product management, shopping cart workflows, order processing, and payment handling using modern web development technologies.
+<p align="center">
+  A modern REST API for managing products, carts, orders, payments, and customer transactions in a fast-food ordering ecosystem.
+</p>
 
-Inspired by premium coffee culture and the vibrant atmosphere of Sydney, Kings Brew combines elegant branding with practical software engineering concepts, making it an ideal learning project for developers exploring enterprise-level API development.
+---
 
-## ☕ Core Features
+## 📖 Overview
 
-- Authentication & Authorization
-- Categories Management
-- Products Management
-- Product Images
-- Favorites
-- Reviews & Ratings
-- Shopping Cart
-- Checkout Process
-- Orders Management
-- Payments Management
-- Order Status Tracking
-- Audit Logging
+Byte Burger API powers a futuristic fast-food ordering platform where customers can browse products, add items to their cart, place orders, complete payments, and view transaction history.
 
-## 🏗️ Database Architecture
+The project focuses on real-world backend development concepts including authentication, authorization, CRUD operations, search, filtering, pagination, checkout workflows, payment processing, and API documentation.
 
-The system is built around 12 core entities:
+---
 
-- Users
-- Categories
-- Products
-- Product Images
-- Favorites
-- Cart Items
-- Orders
-- Order Items
-- Payments
-- Reviews
-- Order Status Histories
-- Audit Logs
+## ✨ Features
 
-## 🔄 Customer Journey
+### 🔐 Authentication & Authorization
+
+- JWT Authentication
+- Protected Routes
+- Role-Based Access Control (RBAC)
+- Admin & Customer Roles
+
+### 🍔 Product Management
+
+- Create Product
+- View Product
+- Update Product
+- Delete Product
+- Product Categories
+
+### 🔍 Search & Filtering
+
+- Search Products
+- Category Filtering
+- Sorting
+- Pagination
+
+### 🛒 Cart System
+
+- Add Items to Cart
+- Update Quantity
+- Remove Items
+- Clear Cart
+
+### 📦 Order Management
+
+- Checkout Workflow
+- Order Tracking
+- Order History
+- Order Status Updates
+
+### 💳 Payment Processing
+
+- Payment Simulation
+- Multiple Payment Methods
+- Payment History
+
+### 📚 API Documentation
+
+- Swagger Integration
+- Interactive API Testing
+
+---
+
+## 🏗️ Architecture
 
 ```text
-Register
+Product
    ↓
-Login
-   ↓
-Browse Products
-   ↓
-Add To Favorites
-   ↓
-Add To Cart
+Cart
    ↓
 Checkout
    ↓
-Create Order
+Order
    ↓
-Create Payment
+Payment
    ↓
-Order Processing
-   ↓
-Completed Order
+History
 ```
 
-## 🚀 Technology Stack
+---
+
+## 👥 Roles
+
+### ADMIN
+
+- Manage Categories
+- Manage Products
+- View Orders
+- Update Order Status
+
+### CUSTOMER
+
+- Browse Products
+- Manage Cart
+- Place Orders
+- Make Payments
+- View History
+
+---
+
+## 🗄️ Database Schema
+
+```text
+users
+roles
+
+categories
+products
+
+cart_items
+
+orders
+order_items
+
+payments
+
+audit_logs
+```
+
+---
+
+## 📡 Main Endpoints
+
+### Authentication
+
+```http
+POST /auth/register
+POST /auth/login
+
+GET  /auth/me
+```
+
+### Categories
+
+```http
+GET    /categories
+GET    /categories/:id
+
+POST   /categories
+PATCH  /categories/:id
+DELETE /categories/:id
+```
+
+### Products
+
+```http
+GET    /products
+GET    /products/:id
+
+POST   /products
+PATCH  /products/:id
+DELETE /products/:id
+```
+
+### Cart
+
+```http
+GET    /cart
+
+POST   /cart/items
+
+PATCH  /cart/items/:id
+
+DELETE /cart/items/:id
+
+DELETE /cart/clear
+```
+
+### Orders
+
+```http
+POST   /checkout
+
+GET    /orders
+GET    /orders/:id
+
+PATCH  /orders/:id/status
+```
+
+### Payments
+
+```http
+POST   /payments
+
+GET    /payments
+GET    /payments/:id
+```
+
+### History
+
+```http
+GET /orders/history
+
+GET /payments/history
+```
+
+---
+
+## 🔎 Query Features
+
+### Search
+
+```http
+GET /products?search=burger
+```
+
+### Pagination
+
+```http
+GET /products?page=1&limit=10
+```
+
+### Filter
+
+```http
+GET /products?category=burger
+```
+
+### Sort
+
+```http
+GET /products?sort=price
+```
+
+---
+
+## 🛠️ Tech Stack
 
 - NestJS
-- TypeScript
-- Prisma ORM
 - PostgreSQL
-- JWT Authentication
-- Swagger API Documentation
+- Supabase
+- JWT
+- Swagger
+- Render
+
+---
+
+## 🚀 Deployment
+
+### API
+
+```text
+https://byte-burger-api.onrender.com
+```
+
+### Swagger
+
+```text
+https://byte-burger-api.onrender.com/api-docs
+```
+
+---
 
 ## 🎯 Learning Objectives
 
-Kings Brew is designed to help developers understand:
+This project is designed to practice:
 
-- Modular NestJS Architecture
 - REST API Development
-- Database Relationships
 - Authentication & Authorization
-- E-Commerce Workflows
-- Transaction Management
-- Backend Best Practices
-- Real-World Project Structure
+- Database Relationships
+- CRUD Operations
+- Search & Pagination
+- Business Workflow Implementation
+- Order & Payment Processing
+- API Documentation
+- Cloud Deployment
 
 ---
 
 <p align="center">
-  <strong>👑 Kings Brew</strong><br/>
-  Modern Coffee Ordering Platform Study Case
+  Built as part of the Backend API Ecosystem Collection 🍔
 </p>
