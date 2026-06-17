@@ -10,7 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { type Request } from 'express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -18,53 +23,149 @@ import { OrdersService } from './orders.service';
 
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
-@Controller('orders')
+import { type AuthRequest } from '../common/interfaces/auth-request.interface';
+
+import {
+  SwaggerBadRequest,
+  SwaggerNotFound,
+  SwaggerSuccess,
+  SwaggerUnauthorized,
+} from '../common/swagger/swagger-response';
+
+@ApiTags('Orders')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Controller('orders')
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
   ) { }
 
   @Post('checkout')
+  @ApiOperation({
+    summary: 'Checkout Cart',
+    description:
+      'Create order from current user cart items',
+  })
+  @SwaggerSuccess({
+    message: 'Checkout successful',
+    data: {
+      id: 1,
+      userId: 1,
+      orderNumber:
+        'KB-1781668021085',
+      totalAmount: 356000,
+      status: 'PENDING',
+    },
+  })
+  @SwaggerBadRequest(
+    'Cart is empty',
+  )
+  @SwaggerUnauthorized()
   checkout(
-    @Req() req: Request,
+    @Req() req: AuthRequest,
   ) {
     return this.ordersService.checkout(
-      Number(
-        (req as any).user.id,
-      ),
+      req.user.id,
     );
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get Orders',
+    description:
+      'Retrieve current user orders',
+  })
+  @SwaggerSuccess({
+    data: [
+      {
+        id: 1,
+        orderNumber:
+          'KB-1781668021085',
+        totalAmount: 356000,
+        status: 'PENDING',
+      },
+    ],
+  })
+  @SwaggerUnauthorized()
   findAll(
-    @Req() req: Request,
+    @Req() req: AuthRequest,
   ) {
     return this.ordersService.findAll(
-      Number(
-        (req as any).user.id,
-      ),
+      req.user.id,
     );
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get Order',
+    description:
+      'Retrieve order detail by id',
+  })
+  @SwaggerSuccess({
+    data: {
+      id: 1,
+      orderNumber:
+        'KB-1781668021085',
+      totalAmount: 356000,
+      status: 'PENDING',
+      items: [
+        {
+          id: 1,
+          productName:
+            'Espresso',
+          quantity: 2,
+          price: 25000,
+        },
+      ],
+    },
+  })
+  @SwaggerNotFound(
+    'Order not found',
+  )
+  @SwaggerUnauthorized()
   findOne(
-    @Req() req: Request,
+    @Req() req: AuthRequest,
 
-    @Param('id', ParseIntPipe)
+    @Param(
+      'id',
+      ParseIntPipe,
+    )
     id: number,
   ) {
     return this.ordersService.findOne(
       id,
-      Number(
-        (req as any).user.id,
-      ),
+      req.user.id,
     );
   }
 
   @Patch(':id/status')
+  @ApiOperation({
+    summary:
+      'Update Order Status',
+    description:
+      'Update order status by id',
+  })
+  @ApiBody({
+    type: UpdateOrderStatusDto,
+  })
+  @SwaggerSuccess({
+    message:
+      'Order status updated successfully',
+    data: {
+      id: 1,
+      status: 'PROCESSING',
+    },
+  })
+  @SwaggerNotFound(
+    'Order not found',
+  )
+  @SwaggerUnauthorized()
   updateStatus(
-    @Param('id', ParseIntPipe)
+    @Param(
+      'id',
+      ParseIntPipe,
+    )
     id: number,
 
     @Body()

@@ -1,13 +1,12 @@
-import {
-  ValidationPipe,
-} from '@nestjs/common';
-
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+
+import {
+  SwaggerModule,
+  DocumentBuilder,
+} from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app =
@@ -25,12 +24,26 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-  );
+  const config =
+    new DocumentBuilder()
+      .setTitle('Kings Brew API')
+      .setDescription(
+        'Coffee Shop Backend API',
+      )
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
 
-  app.useGlobalInterceptors(
-    new ResponseInterceptor(),
+  const document =
+    SwaggerModule.createDocument(
+      app,
+      config,
+    );
+
+  SwaggerModule.setup(
+    'api',
+    app,
+    document,
   );
 
   await app.listen(
@@ -38,7 +51,11 @@ async function bootstrap() {
   );
 
   console.log(
-    `🚀 Server running on port ${process.env.PORT ?? 3000}`,
+    `Server running on http://localhost:3000`,
+  );
+
+  console.log(
+    `Swagger running on http://localhost:3000/api`,
   );
 }
 
