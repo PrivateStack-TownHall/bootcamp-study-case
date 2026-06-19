@@ -15,13 +15,13 @@ import { QueryProductDto } from './dto/query-product.dto';
 export class ProductsService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(dto: CreateProductDto) {
       const product =
          await this.prisma.product.create({
             data: {
-               appType: AppType.COFFEE,
+               appType: AppType.MART,
                categoryId: dto.categoryId,
                name: dto.name,
                description: dto.description,
@@ -36,7 +36,8 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product created successfully',
+         message:
+            'Inventory created successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -50,7 +51,10 @@ export class ProductsService {
 
       const skip = (page - 1) * limit;
 
-      const where: any = {};
+      const where: any = {
+         appType: AppType.MART,
+      };
+
       const orderBy: any = {};
 
       if (query.search) {
@@ -86,8 +90,8 @@ export class ProductsService {
                Object.keys(orderBy).length > 0
                   ? orderBy
                   : {
-                     id: 'desc',
-                  },
+                       id: 'desc',
+                    },
          });
 
       const total =
@@ -114,9 +118,10 @@ export class ProductsService {
 
    async findOne(id: number) {
       const product =
-         await this.prisma.product.findUnique({
+         await this.prisma.product.findFirst({
             where: {
                id,
+               appType: AppType.MART,
             },
 
             include: {
@@ -159,7 +164,8 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product updated successfully',
+         message:
+            'Inventory updated successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -177,7 +183,8 @@ export class ProductsService {
       });
 
       return {
-         message: 'Product deleted successfully',
+         message:
+            'Inventory deleted successfully',
       };
    }
 }

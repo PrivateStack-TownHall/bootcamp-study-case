@@ -12,7 +12,7 @@ import { UpdateProductImageDto } from './dto/update-product-image.dto';
 export class ProductImagesService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(
       dto: CreateProductImageDto,
@@ -33,7 +33,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image created successfully',
+            'Inventory image created successfully',
 
          data: image,
       };
@@ -98,7 +98,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image updated successfully',
+            'Inventory image updated successfully',
 
          data: image,
       };
@@ -115,7 +115,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image deleted successfully',
+            'Inventory image deleted successfully',
       };
    }
 }

@@ -12,13 +12,18 @@ export class UpdateOrderStatusDto {
    @ApiProperty({
       enum: OrderStatus,
       example: OrderStatus.PROCESSING,
+      description:
+         'Order status',
    })
    @IsEnum(OrderStatus)
    status!: OrderStatus;
 
    @ApiProperty({
-      example: 'Preparing coffee',
+      example:
+         'Preparing order for shipment',
       required: false,
+      description:
+         'Additional notes for the order',
    })
    @IsOptional()
    @IsString()

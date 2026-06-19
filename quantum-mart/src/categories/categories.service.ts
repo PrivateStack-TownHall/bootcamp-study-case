@@ -14,14 +14,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(
       dto: CreateCategoryDto,
    ) {
       return this.prisma.category.create({
          data: {
-            appType: AppType.COFFEE,
+            appType: AppType.MART,
             name: dto.name,
             description: dto.description,
          },
@@ -30,6 +30,9 @@ export class CategoriesService {
 
    async findAll() {
       return this.prisma.category.findMany({
+         where: {
+            appType: AppType.MART,
+         },
          orderBy: {
             id: 'desc',
          },
@@ -38,9 +41,10 @@ export class CategoriesService {
 
    async findOne(id: number) {
       const category =
-         await this.prisma.category.findUnique({
+         await this.prisma.category.findFirst({
             where: {
                id,
+               appType: AppType.MART,
             },
          });
 

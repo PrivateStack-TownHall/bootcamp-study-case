@@ -6,7 +6,7 @@ import {
 
 export class LoginDto {
    @ApiProperty({
-      example: 'admin@kingsbrew.com',
+      example: 'admin@quantummart.com',
    })
    @IsEmail()
    email!: string;

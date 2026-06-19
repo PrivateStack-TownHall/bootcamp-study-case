@@ -34,41 +34,41 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Products')
-@Controller('products')
+@ApiTags('Inventory')
+@Controller('inventory')
 export class ProductsController {
    constructor(
       private readonly productsService: ProductsService,
-   ) { }
+   ) {}
 
    @Post()
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Product',
+      summary: 'Create Inventory',
       description:
-         'Create a new product',
+         'Create a new inventory product',
    })
    @ApiBody({
       type: CreateProductDto,
    })
    @SwaggerCreated({
-      id: 1,
-      categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      id: 95,
+      categoryId: 23,
+      appType: 'MART',
+      name: 'AI Smart Assistant',
       description:
-         'Strong espresso shot',
-      price: 25000,
-      stock: 100,
+         'Voice-controlled AI assistant for productivity and automation.',
+      price: 2499000,
+      stock: 50,
       isActive: true,
       createdAt:
-         '2026-06-17T00:00:00.000Z',
+         '2026-06-20T00:00:00.000Z',
       updatedAt:
-         '2026-06-17T00:00:00.000Z',
+         '2026-06-20T00:00:00.000Z',
    })
    @SwaggerBadRequest(
-      'Invalid product data',
+      'Invalid inventory data',
    )
    @SwaggerUnauthorized()
    create(
@@ -82,24 +82,24 @@ export class ProductsController {
 
    @Get()
    @ApiOperation({
-      summary: 'Get Products',
+      summary: 'Get Inventory',
       description:
-         'Retrieve products with pagination, search and sorting',
+         'Retrieve inventory products with pagination, search and sorting',
    })
    @SwaggerSuccess({
       page: 1,
       limit: 10,
-      total: 12,
+      total: 25,
       data: [
          {
-            id: 1,
-            categoryId: 1,
-            appType: 'COFFEE',
-            name: 'Espresso',
+            id: 95,
+            categoryId: 23,
+            appType: 'MART',
+            name: 'AI Smart Assistant',
             description:
-               'Strong espresso shot',
-            price: 25000,
-            stock: 100,
+               'Voice-controlled AI assistant for productivity and automation.',
+            price: 2499000,
+            stock: 50,
             isActive: true,
          },
       ],
@@ -115,25 +115,31 @@ export class ProductsController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Product',
+      summary: 'Get Inventory',
       description:
-         'Retrieve product detail by id',
+         'Retrieve inventory detail by id',
    })
    @SwaggerSuccess({
-      id: 1,
-      categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      id: 95,
+      categoryId: 23,
+      appType: 'MART',
+      name: 'AI Smart Assistant',
       description:
-         'Strong espresso shot',
-      price: 25000,
-      stock: 100,
+         'Voice-controlled AI assistant for productivity and automation.',
+      price: 2499000,
+      stock: 50,
       isActive: true,
       category: {
-         id: 1,
-         name: 'Coffee',
+         id: 23,
+         name: 'AI Devices',
       },
-      images: [],
+      images: [
+         {
+            id: 149,
+            imageUrl:
+               'https://images.unsplash.com/photo-1677442136019-21780ecad995',
+         },
+      ],
    })
    @SwaggerNotFound(
       'Product not found',
@@ -154,22 +160,22 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Product',
+      summary: 'Update Inventory',
       description:
-         'Update product by id',
+         'Update inventory by id',
    })
    @ApiBody({
       type: UpdateProductDto,
    })
    @SwaggerSuccess({
-      id: 1,
-      categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Updated Espresso',
+      id: 95,
+      categoryId: 23,
+      appType: 'MART',
+      name: 'AI Smart Assistant',
       description:
-         'Updated description',
-      price: 30000,
-      stock: 90,
+         'Updated AI assistant with enhanced features.',
+      price: 2699000,
+      stock: 45,
       isActive: true,
    })
    @SwaggerNotFound(
@@ -196,9 +202,9 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Product',
+      summary: 'Delete Inventory',
       description:
-         'Delete product by id',
+         'Delete inventory by id',
    })
    @SwaggerSuccess({
       message:

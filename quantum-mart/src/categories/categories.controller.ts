@@ -32,30 +32,31 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Categories')
-@Controller('categories')
+@ApiTags('Inventory Categories')
+@Controller('inventory-categories')
 export class CategoriesController {
    constructor(
       private readonly categoriesService: CategoriesService,
-   ) { }
+   ) {}
 
    @Get()
    @ApiOperation({
-      summary: 'Get Categories',
+      summary:
+         'Get Inventory Categories',
       description:
-         'Retrieve all categories',
+         'Retrieve all inventory categories',
    })
    @SwaggerSuccess({
       data: [
          {
-            id: 1,
-            name: 'Coffee',
+            id: 23,
+            name: 'AI Devices',
             description:
-               'Coffee category',
+               'Artificial intelligence devices',
             createdAt:
-               '2026-06-17T00:00:00.000Z',
+               '2026-06-19T00:00:00.000Z',
             updatedAt:
-               '2026-06-17T00:00:00.000Z',
+               '2026-06-19T00:00:00.000Z',
          },
       ],
    })
@@ -65,16 +66,21 @@ export class CategoriesController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Category',
+      summary:
+         'Get Inventory Category',
       description:
-         'Retrieve category by id',
+         'Retrieve inventory category by id',
    })
    @SwaggerSuccess({
       data: {
-         id: 1,
-         name: 'Coffee',
+         id: 23,
+         name: 'AI Devices',
          description:
-            'Coffee category',
+            'Artificial intelligence devices',
+            createdAt:
+               '2026-06-19T00:00:00.000Z',
+            updatedAt:
+               '2026-06-19T00:00:00.000Z',
       },
    })
    @SwaggerNotFound(
@@ -96,9 +102,10 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Category',
+      summary:
+         'Create Inventory Category',
       description:
-         'Create new category',
+         'Create new inventory category',
    })
    @ApiBody({
       type: CreateCategoryDto,
@@ -107,10 +114,14 @@ export class CategoriesController {
       message:
          'Category created successfully',
       data: {
-         id: 1,
-         name: 'Coffee',
+         id: 23,
+         name: 'AI Devices',
          description:
-            'Coffee category',
+            'Artificial intelligence devices',
+         createdAt:
+            '2026-06-19T00:00:00.000Z',
+         updatedAt:
+            '2026-06-19T00:00:00.000Z',
       },
    })
    @SwaggerBadRequest(
@@ -130,9 +141,10 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Category',
+      summary:
+         'Update Inventory Category',
       description:
-         'Update category by id',
+         'Update inventory category by id',
    })
    @ApiBody({
       type: UpdateCategoryDto,
@@ -141,10 +153,14 @@ export class CategoriesController {
       message:
          'Category updated successfully',
       data: {
-         id: 1,
-         name: 'Coffee',
+         id: 23,
+         name: 'AI Devices',
          description:
-            'Updated coffee category',
+            'Updated artificial intelligence devices',
+         createdAt:
+            '2026-06-19T00:00:00.000Z',
+         updatedAt:
+            '2026-06-19T00:00:00.000Z',
       },
    })
    @SwaggerNotFound(
@@ -171,9 +187,10 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Category',
+      summary:
+         'Delete Inventory Category',
       description:
-         'Delete category by id',
+         'Delete inventory category by id',
    })
    @SwaggerSuccess({
       message:

@@ -40,24 +40,25 @@ import {
 export class ReviewsController {
   constructor(
     private readonly reviewsService: ReviewsService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get Reviews',
     description:
-      'Retrieve all product reviews',
+      'Retrieve all inventory reviews',
   })
   @SwaggerSuccess({
     data: [
       {
-        id: 1,
-        userId: 1,
-        productId: 1,
+        id: 61,
+        userId: 20,
+        productId: 95,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'AI Smart Assistant exceeded my expectations.',
         createdAt:
-          '2026-06-17T00:00:00.000Z',
+          '2026-06-20T00:00:00.000Z',
       },
     ],
   })
@@ -68,23 +69,24 @@ export class ReviewsController {
   @Get('product/:productId')
   @ApiOperation({
     summary:
-      'Get Reviews By Product',
+      'Get Reviews By Inventory',
     description:
-      'Retrieve reviews by product id',
+      'Retrieve reviews by inventory product id',
   })
   @SwaggerSuccess({
     data: [
       {
-        id: 1,
-        userId: 1,
-        productId: 1,
+        id: 61,
+        userId: 20,
+        productId: 95,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'AI Smart Assistant exceeded my expectations.',
       },
     ],
   })
   @SwaggerNotFound(
-    'Product not found',
+    'Inventory not found',
   )
   findByProduct(
     @Param(
@@ -104,7 +106,7 @@ export class ReviewsController {
   @ApiOperation({
     summary: 'Create Review',
     description:
-      'Create review for product',
+      'Create review for inventory product',
   })
   @ApiBody({
     type: CreateReviewDto,
@@ -113,11 +115,12 @@ export class ReviewsController {
     message:
       'Review created successfully',
     data: {
-      id: 1,
-      userId: 1,
-      productId: 1,
+      id: 61,
+      userId: 20,
+      productId: 95,
       rating: 5,
-      comment: 'Excellent coffee',
+      comment:
+        'AI Smart Assistant exceeded my expectations.',
     },
   })
   @SwaggerBadRequest(
@@ -149,10 +152,10 @@ export class ReviewsController {
     message:
       'Review updated successfully',
     data: {
-      id: 1,
+      id: 61,
       rating: 4,
       comment:
-        'Good coffee, updated review',
+        'Great product after extended usage.',
     },
   })
   @SwaggerNotFound(

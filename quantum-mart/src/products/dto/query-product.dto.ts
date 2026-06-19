@@ -1,4 +1,7 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+   ApiPropertyOptional,
+} from '@nestjs/swagger';
+
 import { Type } from 'class-transformer';
 
 import {
@@ -10,7 +13,9 @@ import {
 
 export class QueryProductDto {
    @ApiPropertyOptional({
-      example: 'espresso',
+      example: 'ai',
+      description:
+         'Search inventory by name',
    })
    @IsOptional()
    @IsString()
@@ -18,6 +23,8 @@ export class QueryProductDto {
 
    @ApiPropertyOptional({
       example: 1,
+      description:
+         'Current page number',
    })
    @IsOptional()
    @Type(() => Number)
@@ -26,6 +33,8 @@ export class QueryProductDto {
 
    @ApiPropertyOptional({
       example: 10,
+      description:
+         'Items per page',
    })
    @IsOptional()
    @Type(() => Number)
@@ -33,7 +42,9 @@ export class QueryProductDto {
    limit?: number;
 
    @ApiPropertyOptional({
-      example: 1,
+      example: 23,
+      description:
+         'Inventory category id',
    })
    @IsOptional()
    @Type(() => Number)
@@ -52,6 +63,8 @@ export class QueryProductDto {
    @ApiPropertyOptional({
       enum: ['asc', 'desc'],
       example: 'asc',
+      description:
+         'Sort direction',
    })
    @IsOptional()
    @IsIn(['asc', 'desc'])
