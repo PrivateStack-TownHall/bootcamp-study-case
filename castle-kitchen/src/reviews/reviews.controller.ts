@@ -46,18 +46,19 @@ export class ReviewsController {
   @ApiOperation({
     summary: 'Get Reviews',
     description:
-      'Retrieve all product reviews',
+      'Retrieve all menu reviews',
   })
   @SwaggerSuccess({
     data: [
       {
-        id: 1,
-        userId: 1,
-        productId: 1,
+        id: 11,
+        userId: 8,
+        productId: 30,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'Perfectly cooked sirloin steak.',
         createdAt:
-          '2026-06-17T00:00:00.000Z',
+          '2026-06-18T00:00:00.000Z',
       },
     ],
   })
@@ -68,23 +69,24 @@ export class ReviewsController {
   @Get('product/:productId')
   @ApiOperation({
     summary:
-      'Get Reviews By Product',
+      'Get Reviews By Menu',
     description:
-      'Retrieve reviews by product id',
+      'Retrieve reviews by menu id',
   })
   @SwaggerSuccess({
     data: [
       {
-        id: 1,
-        userId: 1,
-        productId: 1,
+        id: 11,
+        userId: 8,
+        productId: 30,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'Perfectly cooked sirloin steak.',
       },
     ],
   })
   @SwaggerNotFound(
-    'Product not found',
+    'Menu not found',
   )
   findByProduct(
     @Param(
@@ -104,7 +106,7 @@ export class ReviewsController {
   @ApiOperation({
     summary: 'Create Review',
     description:
-      'Create review for product',
+      'Create review for menu',
   })
   @ApiBody({
     type: CreateReviewDto,
@@ -113,11 +115,12 @@ export class ReviewsController {
     message:
       'Review created successfully',
     data: {
-      id: 1,
-      userId: 1,
-      productId: 1,
+      id: 11,
+      userId: 8,
+      productId: 30,
       rating: 5,
-      comment: 'Excellent coffee',
+      comment:
+        'Perfectly cooked sirloin steak.',
     },
   })
   @SwaggerBadRequest(
@@ -149,10 +152,10 @@ export class ReviewsController {
     message:
       'Review updated successfully',
     data: {
-      id: 1,
+      id: 11,
       rating: 4,
       comment:
-        'Good coffee, updated review',
+        'Great steak and friendly service.',
     },
   })
   @SwaggerNotFound(

@@ -21,7 +21,7 @@ export class ProductsService {
       const product =
          await this.prisma.product.create({
             data: {
-               appType: AppType.COFFEE,
+               appType: AppType.RESTAURANT,
                categoryId: dto.categoryId,
                name: dto.name,
                description: dto.description,
@@ -36,7 +36,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product created successfully',
+         message: 'Menu created successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -127,7 +127,7 @@ export class ProductsService {
 
       if (!product) {
          throw new NotFoundException(
-            'Product not found',
+            'Menu not found',
          );
       }
 
@@ -159,7 +159,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product updated successfully',
+         message: 'Menu updated successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -177,7 +177,7 @@ export class ProductsService {
       });
 
       return {
-         message: 'Product deleted successfully',
+         message: 'Menu deleted successfully',
       };
    }
 }

@@ -10,7 +10,7 @@ import {
 
 export class QueryProductDto {
    @ApiPropertyOptional({
-      example: 'espresso',
+      example: 'steak',
    })
    @IsOptional()
    @IsString()

@@ -17,7 +17,7 @@ export class UpdateOrderStatusDto {
    status!: OrderStatus;
 
    @ApiProperty({
-      example: 'Preparing coffee',
+      example: 'Preparing menu',
       required: false,
    })
    @IsOptional()

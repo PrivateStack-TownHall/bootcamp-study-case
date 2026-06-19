@@ -23,21 +23,21 @@ export class UpdateProductDto {
    categoryId?: number;
 
    @ApiPropertyOptional({
-      example: 'Espresso',
+      example: 'Rib Eye Steak',
    })
    @IsOptional()
    @IsString()
    name?: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example: 'Premium rib eye steak',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiPropertyOptional({
-      example: 25000,
+      example: 185000,
    })
    @IsOptional()
    @Type(() => Number)
@@ -46,7 +46,7 @@ export class UpdateProductDto {
    price?: number;
 
    @ApiPropertyOptional({
-      example: 100,
+      example: 40,
    })
    @IsOptional()
    @Type(() => Number)

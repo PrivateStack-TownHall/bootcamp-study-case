@@ -50,7 +50,7 @@ export class AuthController {
       message: 'Register success',
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
+         email: 'admin@castlekitchen.com',
          fullName: 'Admin',
          role: 'CUSTOMER',
       },
@@ -82,7 +82,7 @@ export class AuthController {
 
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
+         email: 'admin@castlekitchen.com',
          fullName: 'Admin',
          role: 'CUSTOMER',
       },
@@ -111,7 +111,7 @@ export class AuthController {
       message: 'Current user',
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
+         email: 'admin@castlekitchen.com',
          fullName: 'Admin',
          role: 'CUSTOMER',
       },

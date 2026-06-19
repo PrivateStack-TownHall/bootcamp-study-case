@@ -12,7 +12,7 @@ export class RegisterDto {
    fullName!: string;
 
    @ApiProperty({
-      example: 'admin@kingsbrew.com',
+      example: 'admin@castlekitchen.com',
    })
    @IsEmail()
    email!: string;

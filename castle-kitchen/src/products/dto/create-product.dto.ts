@@ -20,21 +20,21 @@ export class CreateProductDto {
    categoryId!: number;
 
    @ApiProperty({
-      example: 'Espresso',
+      example: 'Sirloin Steak',
    })
    @IsNotEmpty()
    @IsString()
    name!: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example: 'Juicy grilled sirloin steak',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiProperty({
-      example: 25000,
+      example: 150000,
    })
    @Type(() => Number)
    @IsNumber()
@@ -42,7 +42,7 @@ export class CreateProductDto {
    price!: number;
 
    @ApiProperty({
-      example: 100,
+      example: 50,
    })
    @Type(() => Number)
    @IsInt()

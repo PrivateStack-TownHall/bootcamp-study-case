@@ -33,7 +33,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image created successfully',
+            'Menu image created successfully',
 
          data: image,
       };
@@ -68,7 +68,7 @@ export class ProductImagesService {
 
       if (!image) {
          throw new NotFoundException(
-            'Product image not found',
+            'Menu image not found',
          );
       }
 
@@ -98,7 +98,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image updated successfully',
+            'Menu image updated successfully',
 
          data: image,
       };
@@ -115,7 +115,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image deleted successfully',
+            'Menu image deleted successfully',
       };
    }
 }

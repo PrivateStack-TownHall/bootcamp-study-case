@@ -34,8 +34,8 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Products')
-@Controller('products')
+@ApiTags('Menu')
+@Controller('menu')
 export class ProductsController {
    constructor(
       private readonly productsService: ProductsService,
@@ -45,30 +45,31 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Product',
+      summary:
+         'Create Menu Item',
       description:
-         'Create a new product',
+         'Create a new menu item',
    })
    @ApiBody({
       type: CreateProductDto,
    })
    @SwaggerCreated({
-      id: 1,
-      categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      id: 30,
+      categoryId: 8,
+      appType: 'RESTAURANT',
+      name: 'Sirloin Steak',
       description:
-         'Strong espresso shot',
-      price: 25000,
-      stock: 100,
+         'Juicy grilled sirloin steak',
+      price: 150000,
+      stock: 50,
       isActive: true,
       createdAt:
-         '2026-06-17T00:00:00.000Z',
+         '2026-06-18T00:00:00.000Z',
       updatedAt:
-         '2026-06-17T00:00:00.000Z',
+         '2026-06-18T00:00:00.000Z',
    })
    @SwaggerBadRequest(
-      'Invalid product data',
+      'Invalid menu item data',
    )
    @SwaggerUnauthorized()
    create(
@@ -82,24 +83,24 @@ export class ProductsController {
 
    @Get()
    @ApiOperation({
-      summary: 'Get Products',
+      summary: 'Get Menu',
       description:
-         'Retrieve products with pagination, search and sorting',
+         'Retrieve menu items with pagination, search and sorting',
    })
    @SwaggerSuccess({
       page: 1,
       limit: 10,
-      total: 12,
+      total: 25,
       data: [
          {
-            id: 1,
-            categoryId: 1,
-            appType: 'COFFEE',
-            name: 'Espresso',
+            id: 30,
+            categoryId: 8,
+            appType: 'RESTAURANT',
+            name: 'Sirloin Steak',
             description:
-               'Strong espresso shot',
-            price: 25000,
-            stock: 100,
+               'Juicy grilled sirloin steak',
+            price: 150000,
+            stock: 50,
             isActive: true,
          },
       ],
@@ -115,28 +116,29 @@ export class ProductsController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Product',
+      summary:
+         'Get Menu Item',
       description:
-         'Retrieve product detail by id',
+         'Retrieve menu item detail by id',
    })
    @SwaggerSuccess({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      appType: 'RESTAURANT',
+      name: 'Sirloin Steak',
       description:
-         'Strong espresso shot',
-      price: 25000,
+         'Premium grilled sirloin steak',
+      price: 150000,
       stock: 100,
       isActive: true,
       category: {
          id: 1,
-         name: 'Coffee',
+         name: 'Steaks',
       },
       images: [],
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Menu item not found',
    )
    findOne(
       @Param(
@@ -154,26 +156,39 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Product',
+      summary:
+         'Update Menu Item',
       description:
-         'Update product by id',
+         'Update menu item by id',
    })
    @ApiBody({
       type: UpdateProductDto,
    })
    @SwaggerSuccess({
-      id: 1,
-      categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Updated Espresso',
+      id: 30,
+      categoryId: 8,
+      appType: 'RESTAURANT',
+      name: 'Sirloin Steak',
       description:
-         'Updated description',
-      price: 30000,
-      stock: 90,
+         'Juicy grilled sirloin steak',
+      price: 150000,
+      stock: 50,
       isActive: true,
+      category: {
+         id: 8,
+         name: 'Steaks',
+      },
+      images: [
+         {
+            id: 59,
+            imageUrl:
+               'https://images.unsplash.com/...',
+            sortOrder: 1,
+         },
+      ],
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Menu item not found',
    )
    @SwaggerUnauthorized()
    update(
@@ -196,16 +211,17 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Product',
+      summary:
+         'Delete Menu Item',
       description:
-         'Delete product by id',
+         'Delete menu item by id',
    })
    @SwaggerSuccess({
       message:
-         'Product deleted successfully',
+         'Menu item deleted successfully',
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Menu item not found',
    )
    @SwaggerUnauthorized()
    remove(
