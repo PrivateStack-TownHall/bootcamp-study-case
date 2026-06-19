@@ -1,7 +1,4 @@
-import {
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { AppType } from '@prisma/client';
 
@@ -13,175 +10,159 @@ import { QueryProductDto } from './dto/query-product.dto';
 
 @Injectable()
 export class ProductsService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(dto: CreateProductDto) {
-      const product =
-         await this.prisma.product.create({
-            data: {
-               appType: AppType.BURGER,
-               categoryId: dto.categoryId,
-               name: dto.name,
-               description: dto.description,
-               price: dto.price,
-               stock: dto.stock,
-               isActive: dto.isActive ?? true,
-            },
-            include: {
-               category: true,
-               images: true,
-            },
-         });
+  async create(dto: CreateProductDto) {
+    const product = await this.prisma.product.create({
+      data: {
+        appType: AppType.BURGER,
+        categoryId: dto.categoryId,
+        name: dto.name,
+        description: dto.description,
+        price: dto.price,
+        stock: dto.stock,
+        isActive: dto.isActive ?? true,
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
 
-      return {
-         message: 'Burger created successfully',
-         data: {
-            ...product,
-            price: Number(product.price),
-         },
+    return {
+      message: 'Burger created successfully',
+      data: {
+        ...product,
+        price: Number(product.price),
+      },
+    };
+  }
+
+  async findAll(query: QueryProductDto) {
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const where: any = {
+      appType: AppType.BURGER,
+    };
+
+    const orderBy: any = {};
+
+    if (query.search) {
+      where.name = {
+        contains: query.search,
+        mode: 'insensitive',
       };
-   }
+    }
 
-   async findAll(query: QueryProductDto) {
-      const page = Number(query.page) || 1;
-      const limit = Number(query.limit) || 10;
+    if (query.categoryId) {
+      where.categoryId = Number(query.categoryId);
+    }
 
-      const skip = (page - 1) * limit;
+    if (query.sort) {
+      orderBy[query.sort] = query.order || 'asc';
+    }
 
-      const where: any = {
-         appType: AppType.BURGER,
-      };
+    const products = await this.prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
 
-      const orderBy: any = {};
+      include: {
+        category: true,
+        images: true,
+      },
 
-      if (query.search) {
-         where.name = {
-            contains: query.search,
-            mode: 'insensitive',
-         };
-      }
-
-      if (query.categoryId) {
-         where.categoryId = Number(
-            query.categoryId,
-         );
-      }
-
-      if (query.sort) {
-         orderBy[query.sort] =
-            query.order || 'asc';
-      }
-
-      const products =
-         await this.prisma.product.findMany({
-            where,
-            skip,
-            take: limit,
-
-            include: {
-               category: true,
-               images: true,
+      orderBy:
+        Object.keys(orderBy).length > 0
+          ? orderBy
+          : {
+              id: 'desc',
             },
+    });
 
-            orderBy:
-               Object.keys(orderBy).length > 0
-                  ? orderBy
-                  : {
-                     id: 'desc',
-                  },
-         });
+    const total = await this.prisma.product.count({
+      where,
+    });
 
-      const total =
-         await this.prisma.product.count({
-            where,
-         });
+    return {
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
 
-      return {
-         meta: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(
-               total / limit,
-            ),
-         },
+      data: products.map((product) => ({
+        ...product,
+        price: Number(product.price),
+      })),
+    };
+  }
 
-         data: products.map((product) => ({
-            ...product,
-            price: Number(product.price),
-         })),
-      };
-   }
+  async findOne(id: number) {
+    const product = await this.prisma.product.findFirst({
+      where: {
+        id,
+        appType: AppType.BURGER,
+      },
 
-   async findOne(id: number) {
-      const product =
-         await this.prisma.product.findFirst({
-            where: {
-               id,
-               appType: AppType.BURGER,
-            },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
 
-            include: {
-               category: true,
-               images: true,
-            },
-         });
+    if (!product) {
+      throw new NotFoundException('Burger not found');
+    }
 
-      if (!product) {
-         throw new NotFoundException(
-            'Burger not found',
-         );
-      }
+    return {
+      data: {
+        ...product,
+        price: Number(product.price),
+      },
+    };
+  }
 
-      return {
-         data: {
-            ...product,
-            price: Number(product.price),
-         },
-      };
-   }
+  async update(id: number, dto: UpdateProductDto) {
+    await this.findOne(id);
 
-   async update(
-      id: number,
-      dto: UpdateProductDto,
-   ) {
-      await this.findOne(id);
+    const product = await this.prisma.product.update({
+      where: {
+        id,
+        appType: AppType.BURGER,
+      },
+      data: dto,
 
-      const product =
-         await this.prisma.product.update({
-            where: {
-               id,
-            },
-            data: dto,
+      include: {
+        category: true,
+        images: true,
+      },
+    });
 
-            include: {
-               category: true,
-               images: true,
-            },
-         });
+    return {
+      message: 'Burger updated successfully',
+      data: {
+        ...product,
+        price: Number(product.price),
+      },
+    };
+  }
 
-      return {
-         message: 'Burger updated successfully',
-         data: {
-            ...product,
-            price: Number(product.price),
-         },
-      };
-   }
+  async remove(id: number) {
+    await this.findOne(id);
 
-   async remove(id: number) {
-      await this.findOne(id);
+    await this.prisma.product.delete({
+      where: {
+        id,
+      },
+    });
 
-      await this.prisma.product.delete({
-         where: {
-            id,
-         },
-      });
-
-      return {
-         message: 'Burger deleted successfully',
-      };
-   }
+    return {
+      message: 'Burger deleted successfully',
+    };
+  }
 }
