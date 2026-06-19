@@ -1,7 +1,4 @@
-import {
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -12,72 +9,63 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(
-      dto: CreateCategoryDto,
-   ) {
-      return this.prisma.category.create({
-         data: {
-            appType: AppType.MART,
-            name: dto.name,
-            description: dto.description,
-         },
-      });
-   }
+  async create(dto: CreateCategoryDto) {
+    return this.prisma.category.create({
+      data: {
+        appType: AppType.MART,
+        name: dto.name,
+        description: dto.description,
+      },
+    });
+  }
 
-   async findAll() {
-      return this.prisma.category.findMany({
-         where: {
-            appType: AppType.MART,
-         },
-         orderBy: {
-            id: 'desc',
-         },
-      });
-   }
+  async findAll() {
+    return this.prisma.category.findMany({
+      where: {
+        appType: AppType.MART,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
 
-   async findOne(id: number) {
-      const category =
-         await this.prisma.category.findFirst({
-            where: {
-               id,
-               appType: AppType.MART,
-            },
-         });
+  async findOne(id: number) {
+    const category = await this.prisma.category.findFirst({
+      where: {
+        id,
+        appType: AppType.MART,
+      },
+    });
 
-      if (!category) {
-         throw new NotFoundException(
-            'Category not found',
-         );
-      }
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
 
-      return category;
-   }
+    return category;
+  }
 
-   async update(
-      id: number,
-      dto: UpdateCategoryDto,
-   ) {
-      await this.findOne(id);
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.findOne(id);
 
-      return this.prisma.category.update({
-         where: {
-            id,
-         },
-         data: dto,
-      });
-   }
+    return this.prisma.category.update({
+      where: {
+        id,
+        appType: AppType.MART,
+      },
+      data: dto,
+    });
+  }
 
-   async remove(id: number) {
-      await this.findOne(id);
+  async remove(id: number) {
+    await this.findOne(id);
 
-      return this.prisma.category.delete({
-         where: {
-            id,
-         },
-      });
-   }
+    return this.prisma.category.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
