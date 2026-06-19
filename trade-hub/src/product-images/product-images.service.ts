@@ -12,7 +12,7 @@ import { UpdateProductImageDto } from './dto/update-product-image.dto';
 export class ProductImagesService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(
       dto: CreateProductImageDto,
@@ -20,10 +20,15 @@ export class ProductImagesService {
       const image =
          await this.prisma.productImage.create({
             data: {
-               productId: dto.productId,
-               imageUrl: dto.imageUrl,
+               productId:
+                  dto.productId,
+
+               imageUrl:
+                  dto.imageUrl,
+
                sortOrder:
-                  dto.sortOrder ?? 0,
+                  dto.sortOrder ??
+                  0,
             },
 
             include: {
@@ -33,7 +38,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image created successfully',
+            'Catalog image created successfully',
 
          data: image,
       };
@@ -42,33 +47,38 @@ export class ProductImagesService {
    async findAll() {
       return {
          data:
-            await this.prisma.productImage.findMany({
-               include: {
-                  product: true,
-               },
+            await this.prisma.productImage.findMany(
+               {
+                  include: {
+                     product: true,
+                  },
 
-               orderBy: {
-                  sortOrder: 'asc',
+                  orderBy: {
+                     sortOrder:
+                        'asc',
+                  },
                },
-            }),
+            ),
       };
    }
 
    async findOne(id: number) {
       const image =
-         await this.prisma.productImage.findUnique({
-            where: {
-               id,
-            },
+         await this.prisma.productImage.findUnique(
+            {
+               where: {
+                  id,
+               },
 
-            include: {
-               product: true,
+               include: {
+                  product: true,
+               },
             },
-         });
+         );
 
       if (!image) {
          throw new NotFoundException(
-            'Product image not found',
+            'Catalog image not found',
          );
       }
 
@@ -84,21 +94,23 @@ export class ProductImagesService {
       await this.findOne(id);
 
       const image =
-         await this.prisma.productImage.update({
-            where: {
-               id,
-            },
+         await this.prisma.productImage.update(
+            {
+               where: {
+                  id,
+               },
 
-            data: dto,
+               data: dto,
 
-            include: {
-               product: true,
+               include: {
+                  product: true,
+               },
             },
-         });
+         );
 
       return {
          message:
-            'Product image updated successfully',
+            'Catalog image updated successfully',
 
          data: image,
       };
@@ -115,7 +127,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image deleted successfully',
+            'Catalog image deleted successfully',
       };
    }
 }

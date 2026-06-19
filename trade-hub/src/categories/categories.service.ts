@@ -21,7 +21,7 @@ export class CategoriesService {
    ) {
       return this.prisma.category.create({
          data: {
-            appType: AppType.COFFEE,
+            appType: AppType.ECOMMERCE,
             name: dto.name,
             description: dto.description,
          },

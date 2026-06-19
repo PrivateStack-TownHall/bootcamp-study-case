@@ -40,13 +40,13 @@ import {
 export class ReviewsController {
   constructor(
     private readonly reviewsService: ReviewsService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get Reviews',
     description:
-      'Retrieve all product reviews',
+      'Retrieve all catalog item reviews',
   })
   @SwaggerSuccess({
     data: [
@@ -55,7 +55,8 @@ export class ReviewsController {
         userId: 1,
         productId: 1,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'Excellent gaming keyboard',
         createdAt:
           '2026-06-17T00:00:00.000Z',
       },
@@ -65,12 +66,12 @@ export class ReviewsController {
     return this.reviewsService.findAll();
   }
 
-  @Get('product/:productId')
+  @Get('catalog/:productId')
   @ApiOperation({
     summary:
-      'Get Reviews By Product',
+      'Get Reviews By Catalog Item',
     description:
-      'Retrieve reviews by product id',
+      'Retrieve reviews by catalog item id',
   })
   @SwaggerSuccess({
     data: [
@@ -79,12 +80,13 @@ export class ReviewsController {
         userId: 1,
         productId: 1,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment:
+          'Excellent gaming keyboard',
       },
     ],
   })
   @SwaggerNotFound(
-    'Product not found',
+    'Catalog item not found',
   )
   findByProduct(
     @Param(
@@ -104,7 +106,7 @@ export class ReviewsController {
   @ApiOperation({
     summary: 'Create Review',
     description:
-      'Create review for product',
+      'Create review for catalog item',
   })
   @ApiBody({
     type: CreateReviewDto,
@@ -112,12 +114,14 @@ export class ReviewsController {
   @SwaggerCreated({
     message:
       'Review created successfully',
+
     data: {
       id: 1,
       userId: 1,
       productId: 1,
       rating: 5,
-      comment: 'Excellent coffee',
+      comment:
+        'Excellent gaming keyboard',
     },
   })
   @SwaggerBadRequest(
@@ -126,7 +130,9 @@ export class ReviewsController {
   @SwaggerUnauthorized()
   create(
     @Req() req: AuthRequest,
-    @Body() dto: CreateReviewDto,
+
+    @Body()
+    dto: CreateReviewDto,
   ) {
     return this.reviewsService.create(
       req.user.id,
@@ -148,11 +154,12 @@ export class ReviewsController {
   @SwaggerSuccess({
     message:
       'Review updated successfully',
+
     data: {
       id: 1,
       rating: 4,
       comment:
-        'Good coffee, updated review',
+        'Great keyboard, updated review',
     },
   })
   @SwaggerNotFound(

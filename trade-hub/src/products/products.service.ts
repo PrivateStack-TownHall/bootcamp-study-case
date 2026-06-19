@@ -15,20 +15,26 @@ import { QueryProductDto } from './dto/query-product.dto';
 export class ProductsService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(dto: CreateProductDto) {
       const product =
          await this.prisma.product.create({
             data: {
-               appType: AppType.COFFEE,
-               categoryId: dto.categoryId,
+               appType:
+                  AppType.ECOMMERCE,
+               categoryId:
+                  dto.categoryId,
                name: dto.name,
-               description: dto.description,
+               description:
+                  dto.description,
                price: dto.price,
                stock: dto.stock,
-               isActive: dto.isActive ?? true,
+               isActive:
+                  dto.isActive ??
+                  true,
             },
+
             include: {
                category: true,
                images: true,
@@ -36,34 +42,46 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product created successfully',
+         message:
+            'Catalog item created successfully',
+
          data: {
             ...product,
-            price: Number(product.price),
+            price: Number(
+               product.price,
+            ),
          },
       };
    }
 
-   async findAll(query: QueryProductDto) {
-      const page = Number(query.page) || 1;
-      const limit = Number(query.limit) || 10;
+   async findAll(
+      query: QueryProductDto,
+   ) {
+      const page =
+         Number(query.page) || 1;
 
-      const skip = (page - 1) * limit;
+      const limit =
+         Number(query.limit) || 10;
+
+      const skip =
+         (page - 1) * limit;
 
       const where: any = {};
       const orderBy: any = {};
 
       if (query.search) {
          where.name = {
-            contains: query.search,
+            contains:
+               query.search,
             mode: 'insensitive',
          };
       }
 
       if (query.categoryId) {
-         where.categoryId = Number(
-            query.categoryId,
-         );
+         where.categoryId =
+            Number(
+               query.categoryId,
+            );
       }
 
       if (query.sort) {
@@ -72,69 +90,87 @@ export class ProductsService {
       }
 
       const products =
-         await this.prisma.product.findMany({
-            where,
-            skip,
-            take: limit,
+         await this.prisma.product.findMany(
+            {
+               where,
+               skip,
+               take: limit,
 
-            include: {
-               category: true,
-               images: true,
+               include: {
+                  category: true,
+                  images: true,
+               },
+
+               orderBy:
+                  Object.keys(
+                     orderBy,
+                  ).length > 0
+                     ? orderBy
+                     : {
+                          id: 'desc',
+                       },
             },
-
-            orderBy:
-               Object.keys(orderBy).length > 0
-                  ? orderBy
-                  : {
-                     id: 'desc',
-                  },
-         });
+         );
 
       const total =
-         await this.prisma.product.count({
-            where,
-         });
+         await this.prisma.product.count(
+            {
+               where,
+            },
+         );
 
       return {
          meta: {
             page,
             limit,
             total,
-            totalPages: Math.ceil(
-               total / limit,
-            ),
+
+            totalPages:
+               Math.ceil(
+                  total / limit,
+               ),
          },
 
-         data: products.map((product) => ({
-            ...product,
-            price: Number(product.price),
-         })),
+         data: products.map(
+            (product) => ({
+               ...product,
+
+               price: Number(
+                  product.price,
+               ),
+            }),
+         ),
       };
    }
 
    async findOne(id: number) {
       const product =
-         await this.prisma.product.findUnique({
-            where: {
-               id,
-            },
+         await this.prisma.product.findUnique(
+            {
+               where: {
+                  id,
+               },
 
-            include: {
-               category: true,
-               images: true,
+               include: {
+                  category: true,
+                  images: true,
+               },
             },
-         });
+         );
 
       if (!product) {
          throw new NotFoundException(
-            'Product not found',
+            'Catalog item not found',
          );
       }
 
       return {
          data: {
             ...product,
-            price: Number(product.price),
+
+            price: Number(
+               product.price,
+            ),
          },
       };
    }
@@ -146,23 +182,31 @@ export class ProductsService {
       await this.findOne(id);
 
       const product =
-         await this.prisma.product.update({
-            where: {
-               id,
-            },
-            data: dto,
+         await this.prisma.product.update(
+            {
+               where: {
+                  id,
+               },
 
-            include: {
-               category: true,
-               images: true,
+               data: dto,
+
+               include: {
+                  category: true,
+                  images: true,
+               },
             },
-         });
+         );
 
       return {
-         message: 'Product updated successfully',
+         message:
+            'Catalog item updated successfully',
+
          data: {
             ...product,
-            price: Number(product.price),
+
+            price: Number(
+               product.price,
+            ),
          },
       };
    }
@@ -177,7 +221,8 @@ export class ProductsService {
       });
 
       return {
-         message: 'Product deleted successfully',
+         message:
+            'Catalog item deleted successfully',
       };
    }
 }

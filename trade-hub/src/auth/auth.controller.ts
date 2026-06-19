@@ -50,8 +50,8 @@ export class AuthController {
       message: 'Register success',
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
-         fullName: 'Admin',
+         email: 'customer@tradehub.com',
+         fullName: 'Customer',
          role: 'CUSTOMER',
       },
    })
@@ -82,8 +82,8 @@ export class AuthController {
 
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
-         fullName: 'Admin',
+         email: 'customer@tradehub.com',
+         fullName: 'Customer',
          role: 'CUSTOMER',
       },
    })
@@ -111,8 +111,8 @@ export class AuthController {
       message: 'Current user',
       data: {
          id: 1,
-         email: 'admin@kingsbrew.com',
-         fullName: 'Admin',
+         email: 'customer@tradehub.com',
+         fullName: 'Customer',
          role: 'CUSTOMER',
       },
    })

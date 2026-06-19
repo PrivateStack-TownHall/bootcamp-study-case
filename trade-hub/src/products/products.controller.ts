@@ -34,20 +34,20 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Products')
-@Controller('products')
+@ApiTags('Catalog')
+@Controller('catalog')
 export class ProductsController {
    constructor(
       private readonly productsService: ProductsService,
-   ) { }
+   ) {}
 
    @Post()
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Product',
+      summary: 'Create Catalog Item',
       description:
-         'Create a new product',
+         'Create a new catalog item',
    })
    @ApiBody({
       type: CreateProductDto,
@@ -55,12 +55,12 @@ export class ProductsController {
    @SwaggerCreated({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      appType: 'ECOMMERCE',
+      name: 'Gaming Keyboard',
       description:
-         'Strong espresso shot',
-      price: 25000,
-      stock: 100,
+         'Mechanical gaming keyboard',
+      price: 500000,
+      stock: 50,
       isActive: true,
       createdAt:
          '2026-06-17T00:00:00.000Z',
@@ -68,7 +68,7 @@ export class ProductsController {
          '2026-06-17T00:00:00.000Z',
    })
    @SwaggerBadRequest(
-      'Invalid product data',
+      'Invalid catalog data',
    )
    @SwaggerUnauthorized()
    create(
@@ -82,9 +82,9 @@ export class ProductsController {
 
    @Get()
    @ApiOperation({
-      summary: 'Get Products',
+      summary: 'Get Catalog',
       description:
-         'Retrieve products with pagination, search and sorting',
+         'Retrieve catalog items with pagination, search and sorting',
    })
    @SwaggerSuccess({
       page: 1,
@@ -94,12 +94,12 @@ export class ProductsController {
          {
             id: 1,
             categoryId: 1,
-            appType: 'COFFEE',
-            name: 'Espresso',
+            appType: 'ECOMMERCE',
+            name: 'Gaming Keyboard',
             description:
-               'Strong espresso shot',
-            price: 25000,
-            stock: 100,
+               'Mechanical gaming keyboard',
+            price: 500000,
+            stock: 50,
             isActive: true,
          },
       ],
@@ -115,28 +115,28 @@ export class ProductsController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Product',
+      summary: 'Get Catalog Item',
       description:
-         'Retrieve product detail by id',
+         'Retrieve catalog item detail by id',
    })
    @SwaggerSuccess({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      appType: 'ECOMMERCE',
+      name: 'Gaming Keyboard',
       description:
-         'Strong espresso shot',
-      price: 25000,
-      stock: 100,
+         'Mechanical gaming keyboard',
+      price: 500000,
+      stock: 50,
       isActive: true,
       category: {
          id: 1,
-         name: 'Coffee',
+         name: 'Electronics',
       },
       images: [],
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Catalog item not found',
    )
    findOne(
       @Param(
@@ -154,9 +154,9 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Product',
+      summary: 'Update Catalog Item',
       description:
-         'Update product by id',
+         'Update catalog item by id',
    })
    @ApiBody({
       type: UpdateProductDto,
@@ -164,16 +164,16 @@ export class ProductsController {
    @SwaggerSuccess({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Updated Espresso',
+      appType: 'ECOMMERCE',
+      name: 'Gaming Keyboard Pro',
       description:
-         'Updated description',
-      price: 30000,
-      stock: 90,
+         'Updated gaming keyboard',
+      price: 600000,
+      stock: 40,
       isActive: true,
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Catalog item not found',
    )
    @SwaggerUnauthorized()
    update(
@@ -196,16 +196,16 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Product',
+      summary: 'Delete Catalog Item',
       description:
-         'Delete product by id',
+         'Delete catalog item by id',
    })
    @SwaggerSuccess({
       message:
-         'Product deleted successfully',
+         'Catalog item deleted successfully',
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Catalog item not found',
    )
    @SwaggerUnauthorized()
    remove(

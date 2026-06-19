@@ -16,6 +16,8 @@ import {
 export class UpdateProductDto {
    @ApiPropertyOptional({
       example: 1,
+      description:
+         'Catalog category id',
    })
    @IsOptional()
    @Type(() => Number)
@@ -23,21 +25,23 @@ export class UpdateProductDto {
    categoryId?: number;
 
    @ApiPropertyOptional({
-      example: 'Espresso',
+      example:
+         'Gaming Keyboard',
    })
    @IsOptional()
    @IsString()
    name?: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example:
+         'Mechanical gaming keyboard',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiPropertyOptional({
-      example: 25000,
+      example: 500000,
    })
    @IsOptional()
    @Type(() => Number)
@@ -46,7 +50,7 @@ export class UpdateProductDto {
    price?: number;
 
    @ApiPropertyOptional({
-      example: 100,
+      example: 50,
    })
    @IsOptional()
    @Type(() => Number)

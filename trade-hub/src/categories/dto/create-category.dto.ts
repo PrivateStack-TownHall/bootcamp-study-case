@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCategoryDto {
    @ApiProperty({
-      example: 'Coffee',
+      example: 'Catalog',
    })
    name!: string;
 
    @ApiProperty({
-      example: 'Coffee category',
+      example: 'Catalog category',
    })
    description?: string;
 }

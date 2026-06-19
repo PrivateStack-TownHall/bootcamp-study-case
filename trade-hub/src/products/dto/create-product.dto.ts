@@ -1,4 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+   ApiProperty,
+   ApiPropertyOptional,
+} from '@nestjs/swagger';
+
 import { Type } from 'class-transformer';
 
 import {
@@ -14,27 +18,31 @@ import {
 export class CreateProductDto {
    @ApiProperty({
       example: 1,
+      description:
+         'Catalog category id',
    })
    @Type(() => Number)
    @IsInt()
    categoryId!: number;
 
    @ApiProperty({
-      example: 'Espresso',
+      example:
+         'Gaming Keyboard',
    })
    @IsNotEmpty()
    @IsString()
    name!: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example:
+         'Mechanical gaming keyboard',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiProperty({
-      example: 25000,
+      example: 500000,
    })
    @Type(() => Number)
    @IsNumber()
@@ -42,7 +50,7 @@ export class CreateProductDto {
    price!: number;
 
    @ApiProperty({
-      example: 100,
+      example: 50,
    })
    @Type(() => Number)
    @IsInt()
