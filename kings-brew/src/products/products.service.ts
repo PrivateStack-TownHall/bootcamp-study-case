@@ -36,7 +36,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product created successfully',
+         message: 'Coffee created successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -127,7 +127,7 @@ export class ProductsService {
 
       if (!product) {
          throw new NotFoundException(
-            'Product not found',
+            'Coffee not found',
          );
       }
 
@@ -159,7 +159,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product updated successfully',
+         message: 'Coffee updated successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -177,7 +177,7 @@ export class ProductsService {
       });
 
       return {
-         message: 'Product deleted successfully',
+         message: 'Coffee deleted successfully',
       };
    }
 }
