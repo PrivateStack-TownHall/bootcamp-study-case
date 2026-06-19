@@ -13,9 +13,11 @@ enum Role {
 }
 
 enum AppType {
+  BURGER
   COFFEE
   RESTAURANT
   ECOMMERCE
+  MART
 }
 
 enum OrderStatus {
