@@ -12,11 +12,24 @@ import { UpdateProductImageDto } from './dto/update-product-image.dto';
 export class ProductImagesService {
    constructor(
       private readonly prisma: PrismaService,
-   ) { }
+   ) {}
 
    async create(
       dto: CreateProductImageDto,
    ) {
+      const product =
+         await this.prisma.product.findUnique({
+            where: {
+               id: dto.productId,
+            },
+         });
+
+      if (!product) {
+         throw new NotFoundException(
+            'Menu item not found',
+         );
+      }
+
       const image =
          await this.prisma.productImage.create({
             data: {
@@ -82,6 +95,21 @@ export class ProductImagesService {
       dto: UpdateProductImageDto,
    ) {
       await this.findOne(id);
+
+      if (dto.productId) {
+         const product =
+            await this.prisma.product.findUnique({
+               where: {
+                  id: dto.productId,
+               },
+            });
+
+         if (!product) {
+            throw new NotFoundException(
+               'Menu item not found',
+            );
+         }
+      }
 
       const image =
          await this.prisma.productImage.update({

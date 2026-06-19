@@ -6,23 +6,103 @@ import {
    UseGuards,
 } from '@nestjs/common';
 
+import {
+   ApiBearerAuth,
+   ApiOperation,
+   ApiTags,
+} from '@nestjs/swagger';
+
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 import { OrderStatusHistoryService } from './order-status-history.service';
 
+import {
+   SwaggerNotFound,
+   SwaggerSuccess,
+   SwaggerUnauthorized,
+} from '../common/swagger/swagger-response';
+
+@ApiTags('Order Status History')
 @Controller('order-status-history')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class OrderStatusHistoryController {
    constructor(
       private readonly orderStatusHistoryService: OrderStatusHistoryService,
-   ) { }
+   ) {}
 
    @Get()
+   @ApiOperation({
+      summary: 'Get Order Status History',
+      description:
+         'Retrieve all order status history records',
+   })
+   @SwaggerSuccess({
+      data: [
+         {
+            id: 1,
+            orderId: 1,
+            status: 'PENDING',
+            createdAt:
+               '2026-06-18T10:00:00.000Z',
+         },
+         {
+            id: 2,
+            orderId: 1,
+            status: 'CONFIRMED',
+            createdAt:
+               '2026-06-18T10:05:00.000Z',
+         },
+      ],
+   })
+   @SwaggerUnauthorized()
    findAll() {
       return this.orderStatusHistoryService.findAll();
    }
 
    @Get('order/:orderId')
+   @ApiOperation({
+      summary:
+         'Get History By Order',
+      description:
+         'Retrieve status history by order id',
+   })
+   @SwaggerSuccess({
+      data: [
+         {
+            id: 1,
+            orderId: 1,
+            status: 'PENDING',
+            createdAt:
+               '2026-06-18T10:00:00.000Z',
+         },
+         {
+            id: 2,
+            orderId: 1,
+            status: 'CONFIRMED',
+            createdAt:
+               '2026-06-18T10:05:00.000Z',
+         },
+         {
+            id: 3,
+            orderId: 1,
+            status: 'PREPARING',
+            createdAt:
+               '2026-06-18T10:15:00.000Z',
+         },
+         {
+            id: 4,
+            orderId: 1,
+            status: 'COMPLETED',
+            createdAt:
+               '2026-06-18T10:35:00.000Z',
+         },
+      ],
+   })
+   @SwaggerNotFound(
+      'Order not found',
+   )
+   @SwaggerUnauthorized()
    findByOrder(
       @Param(
          'orderId',
@@ -36,8 +116,30 @@ export class OrderStatusHistoryController {
    }
 
    @Get(':id')
+   @ApiOperation({
+      summary:
+         'Get Order Status History',
+      description:
+         'Retrieve order status history by id',
+   })
+   @SwaggerSuccess({
+      data: {
+         id: 1,
+         orderId: 1,
+         status: 'PENDING',
+         createdAt:
+            '2026-06-18T10:00:00.000Z',
+      },
+   })
+   @SwaggerNotFound(
+      'Order status history not found',
+   )
+   @SwaggerUnauthorized()
    findOne(
-      @Param('id', ParseIntPipe)
+      @Param(
+         'id',
+         ParseIntPipe,
+      )
       id: number,
    ) {
       return this.orderStatusHistoryService.findOne(

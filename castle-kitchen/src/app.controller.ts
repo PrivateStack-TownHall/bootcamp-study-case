@@ -8,7 +8,7 @@ export class AppController {
   @Get()
   getHello(): { message: string } {
     return {
-      message: 'Kings Brew API',
+      message: 'Castle Kitchen API',
     };
   }
 }
