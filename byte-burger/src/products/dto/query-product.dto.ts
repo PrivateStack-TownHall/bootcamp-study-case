@@ -1,3 +1,5 @@
+// query-product.dto.ts
+
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -10,7 +12,7 @@ import {
 
 export class QueryProductDto {
    @ApiPropertyOptional({
-      example: 'espresso',
+      example: 'cheese burger',
    })
    @IsOptional()
    @IsString()

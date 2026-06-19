@@ -14,27 +14,29 @@ import {
 export class CreateProductDto {
    @ApiProperty({
       example: 1,
+      description: 'Burger category id',
    })
    @Type(() => Number)
    @IsInt()
    categoryId!: number;
 
    @ApiProperty({
-      example: 'Espresso',
+      example: 'Double Cheese Burger',
    })
    @IsNotEmpty()
    @IsString()
    name!: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example:
+         'Juicy beef burger with double cheddar cheese',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiProperty({
-      example: 25000,
+      example: 55000,
    })
    @Type(() => Number)
    @IsNumber()

@@ -21,7 +21,7 @@ export class ProductsService {
       const product =
          await this.prisma.product.create({
             data: {
-               appType: AppType.COFFEE,
+               appType: AppType.BURGER,
                categoryId: dto.categoryId,
                name: dto.name,
                description: dto.description,
@@ -36,7 +36,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product created successfully',
+         message: 'Burger created successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -50,7 +50,10 @@ export class ProductsService {
 
       const skip = (page - 1) * limit;
 
-      const where: any = {};
+      const where: any = {
+         appType: AppType.BURGER,
+      };
+
       const orderBy: any = {};
 
       if (query.search) {
@@ -114,9 +117,10 @@ export class ProductsService {
 
    async findOne(id: number) {
       const product =
-         await this.prisma.product.findUnique({
+         await this.prisma.product.findFirst({
             where: {
                id,
+               appType: AppType.BURGER,
             },
 
             include: {
@@ -127,7 +131,7 @@ export class ProductsService {
 
       if (!product) {
          throw new NotFoundException(
-            'Product not found',
+            'Burger not found',
          );
       }
 
@@ -159,7 +163,7 @@ export class ProductsService {
          });
 
       return {
-         message: 'Product updated successfully',
+         message: 'Burger updated successfully',
          data: {
             ...product,
             price: Number(product.price),
@@ -177,7 +181,7 @@ export class ProductsService {
       });
 
       return {
-         message: 'Product deleted successfully',
+         message: 'Burger deleted successfully',
       };
    }
 }

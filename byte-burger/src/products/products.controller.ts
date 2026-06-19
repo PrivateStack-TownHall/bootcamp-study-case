@@ -34,8 +34,8 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Products')
-@Controller('products')
+@ApiTags('Burgers')
+@Controller('burgers')
 export class ProductsController {
    constructor(
       private readonly productsService: ProductsService,
@@ -45,9 +45,9 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Product',
+      summary: 'Create Burger',
       description:
-         'Create a new product',
+         'Create a new burger',
    })
    @ApiBody({
       type: CreateProductDto,
@@ -55,11 +55,11 @@ export class ProductsController {
    @SwaggerCreated({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      appType: 'BURGER',
+      name: 'Double Cheese Burger',
       description:
-         'Strong espresso shot',
-      price: 25000,
+         'Juicy beef burger with double cheddar cheese',
+      price: 55000,
       stock: 100,
       isActive: true,
       createdAt:
@@ -68,7 +68,7 @@ export class ProductsController {
          '2026-06-17T00:00:00.000Z',
    })
    @SwaggerBadRequest(
-      'Invalid product data',
+      'Invalid burger data',
    )
    @SwaggerUnauthorized()
    create(
@@ -82,9 +82,9 @@ export class ProductsController {
 
    @Get()
    @ApiOperation({
-      summary: 'Get Products',
+      summary: 'Get Burgers',
       description:
-         'Retrieve products with pagination, search and sorting',
+         'Retrieve burgers with pagination, search and sorting',
    })
    @SwaggerSuccess({
       page: 1,
@@ -94,11 +94,11 @@ export class ProductsController {
          {
             id: 1,
             categoryId: 1,
-            appType: 'COFFEE',
-            name: 'Espresso',
+            appType: 'BURGER',
+            name: 'Double Cheese Burger',
             description:
-               'Strong espresso shot',
-            price: 25000,
+               'Juicy beef burger with double cheddar cheese',
+            price: 55000,
             stock: 100,
             isActive: true,
          },
@@ -115,28 +115,28 @@ export class ProductsController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Product',
+      summary: 'Get Burger',
       description:
-         'Retrieve product detail by id',
+         'Retrieve burger detail by id',
    })
    @SwaggerSuccess({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Espresso',
+      appType: 'BURGER',
+      name: 'Double Cheese Burger',
       description:
-         'Strong espresso shot',
-      price: 25000,
+         'Juicy beef burger with double cheddar cheese',
+      price: 55000,
       stock: 100,
       isActive: true,
       category: {
          id: 1,
-         name: 'Coffee',
+         name: 'Beef Burger',
       },
       images: [],
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Burger not found',
    )
    findOne(
       @Param(
@@ -154,9 +154,9 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Product',
+      summary: 'Update Burger',
       description:
-         'Update product by id',
+         'Update burger by id',
    })
    @ApiBody({
       type: UpdateProductDto,
@@ -164,16 +164,16 @@ export class ProductsController {
    @SwaggerSuccess({
       id: 1,
       categoryId: 1,
-      appType: 'COFFEE',
-      name: 'Updated Espresso',
+      appType: 'BURGER',
+      name: 'Updated Double Cheese Burger',
       description:
-         'Updated description',
-      price: 30000,
+         'Updated burger description',
+      price: 60000,
       stock: 90,
       isActive: true,
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Burger not found',
    )
    @SwaggerUnauthorized()
    update(
@@ -196,16 +196,16 @@ export class ProductsController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Product',
+      summary: 'Delete Burger',
       description:
-         'Delete product by id',
+         'Delete burger by id',
    })
    @SwaggerSuccess({
       message:
-         'Product deleted successfully',
+         'Burger deleted successfully',
    })
    @SwaggerNotFound(
-      'Product not found',
+      'Burger not found',
    )
    @SwaggerUnauthorized()
    remove(

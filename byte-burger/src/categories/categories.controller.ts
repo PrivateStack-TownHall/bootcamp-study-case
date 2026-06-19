@@ -32,8 +32,8 @@ import {
    SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Categories')
-@Controller('categories')
+@ApiTags('Burger Categories')
+@Controller('burger-categories')
 export class CategoriesController {
    constructor(
       private readonly categoriesService: CategoriesService,
@@ -41,17 +41,17 @@ export class CategoriesController {
 
    @Get()
    @ApiOperation({
-      summary: 'Get Categories',
+      summary: 'Get Burger Categories',
       description:
-         'Retrieve all categories',
+         'Retrieve all burger categories',
    })
    @SwaggerSuccess({
       data: [
          {
             id: 1,
-            name: 'Coffee',
+            name: 'Beef Burger',
             description:
-               'Coffee category',
+               'Burger category',
             createdAt:
                '2026-06-17T00:00:00.000Z',
             updatedAt:
@@ -65,20 +65,20 @@ export class CategoriesController {
 
    @Get(':id')
    @ApiOperation({
-      summary: 'Get Category',
+      summary: 'Get Burger Category',
       description:
-         'Retrieve category by id',
+         'Retrieve burger category by id',
    })
    @SwaggerSuccess({
       data: {
          id: 1,
-         name: 'Coffee',
+         name: 'Beef Burger',
          description:
-            'Coffee category',
+            'Burger category',
       },
    })
    @SwaggerNotFound(
-      'Category not found',
+      'Burger category not found',
    )
    findOne(
       @Param(
@@ -96,25 +96,25 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Create Category',
+      summary: 'Create Burger Category',
       description:
-         'Create new category',
+         'Create new burger category',
    })
    @ApiBody({
       type: CreateCategoryDto,
    })
    @SwaggerCreated({
       message:
-         'Category created successfully',
+         'Burger category created successfully',
       data: {
          id: 1,
-         name: 'Coffee',
+         name: 'Beef Burger',
          description:
-            'Coffee category',
+            'Burger category',
       },
    })
    @SwaggerBadRequest(
-      'Category already exists',
+      'Burger category already exists',
    )
    @SwaggerUnauthorized()
    create(
@@ -130,25 +130,25 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Update Category',
+      summary: 'Update Burger Category',
       description:
-         'Update category by id',
+         'Update burger category by id',
    })
    @ApiBody({
       type: UpdateCategoryDto,
    })
    @SwaggerSuccess({
       message:
-         'Category updated successfully',
+         'Burger category updated successfully',
       data: {
          id: 1,
-         name: 'Coffee',
+         name: 'Beef Burger',
          description:
-            'Updated coffee category',
+            'Updated burger category',
       },
    })
    @SwaggerNotFound(
-      'Category not found',
+      'Burger category not found',
    )
    @SwaggerUnauthorized()
    update(
@@ -171,16 +171,16 @@ export class CategoriesController {
    @UseGuards(JwtAuthGuard)
    @ApiBearerAuth()
    @ApiOperation({
-      summary: 'Delete Category',
+      summary: 'Delete Burger Category',
       description:
-         'Delete category by id',
+         'Delete burger category by id',
    })
    @SwaggerSuccess({
       message:
-         'Category deleted successfully',
+         'Burger category deleted successfully',
    })
    @SwaggerNotFound(
-      'Category not found',
+      'Burger category not found',
    )
    @SwaggerUnauthorized()
    remove(

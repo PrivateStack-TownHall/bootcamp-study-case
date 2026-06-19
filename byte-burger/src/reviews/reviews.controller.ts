@@ -1,3 +1,5 @@
+// reviews.controller.ts
+
 import {
   Body,
   Controller,
@@ -35,8 +37,8 @@ import {
   SwaggerUnauthorized,
 } from '../common/swagger/swagger-response';
 
-@ApiTags('Reviews')
-@Controller('reviews')
+@ApiTags('Burger Reviews')
+@Controller('burger-reviews')
 export class ReviewsController {
   constructor(
     private readonly reviewsService: ReviewsService,
@@ -44,9 +46,9 @@ export class ReviewsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Reviews',
+    summary: 'Get Burger Reviews',
     description:
-      'Retrieve all product reviews',
+      'Retrieve all burger reviews',
   })
   @SwaggerSuccess({
     data: [
@@ -55,7 +57,7 @@ export class ReviewsController {
         userId: 1,
         productId: 1,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment: 'Amazing burger',
         createdAt:
           '2026-06-17T00:00:00.000Z',
       },
@@ -65,12 +67,12 @@ export class ReviewsController {
     return this.reviewsService.findAll();
   }
 
-  @Get('product/:productId')
+  @Get('burger/:productId')
   @ApiOperation({
     summary:
-      'Get Reviews By Product',
+      'Get Reviews By Burger',
     description:
-      'Retrieve reviews by product id',
+      'Retrieve reviews by burger id',
   })
   @SwaggerSuccess({
     data: [
@@ -79,12 +81,12 @@ export class ReviewsController {
         userId: 1,
         productId: 1,
         rating: 5,
-        comment: 'Excellent coffee',
+        comment: 'Amazing burger',
       },
     ],
   })
   @SwaggerNotFound(
-    'Product not found',
+    'Burger not found',
   )
   findByProduct(
     @Param(
@@ -102,9 +104,9 @@ export class ReviewsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Create Review',
+    summary: 'Create Burger Review',
     description:
-      'Create review for product',
+      'Create review for burger',
   })
   @ApiBody({
     type: CreateReviewDto,
@@ -117,7 +119,7 @@ export class ReviewsController {
       userId: 1,
       productId: 1,
       rating: 5,
-      comment: 'Excellent coffee',
+      comment: 'Amazing burger',
     },
   })
   @SwaggerBadRequest(
@@ -138,9 +140,9 @@ export class ReviewsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Update Review',
+    summary: 'Update Burger Review',
     description:
-      'Update review by id',
+      'Update burger review by id',
   })
   @ApiBody({
     type: UpdateReviewDto,
@@ -152,7 +154,7 @@ export class ReviewsController {
       id: 1,
       rating: 4,
       comment:
-        'Good coffee, updated review',
+        'Great burger, updated review',
     },
   })
   @SwaggerNotFound(
@@ -182,9 +184,9 @@ export class ReviewsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Delete Review',
+    summary: 'Delete Burger Review',
     description:
-      'Delete review by id',
+      'Delete burger review by id',
   })
   @SwaggerSuccess({
     message:

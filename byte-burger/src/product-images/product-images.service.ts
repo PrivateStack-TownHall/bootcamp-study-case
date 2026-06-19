@@ -1,9 +1,13 @@
+// product-images.service.ts
+
 import {
    Injectable,
    NotFoundException,
 } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+
+import { AppType } from '@prisma/client';
 
 import { CreateProductImageDto } from './dto/create-product-image.dto';
 import { UpdateProductImageDto } from './dto/update-product-image.dto';
@@ -33,7 +37,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image created successfully',
+            'Burger image created successfully',
 
          data: image,
       };
@@ -43,6 +47,13 @@ export class ProductImagesService {
       return {
          data:
             await this.prisma.productImage.findMany({
+               where: {
+                  product: {
+                     appType:
+                        AppType.BURGER,
+                  },
+               },
+
                include: {
                   product: true,
                },
@@ -56,9 +67,14 @@ export class ProductImagesService {
 
    async findOne(id: number) {
       const image =
-         await this.prisma.productImage.findUnique({
+         await this.prisma.productImage.findFirst({
             where: {
                id,
+
+               product: {
+                  appType:
+                     AppType.BURGER,
+               },
             },
 
             include: {
@@ -68,7 +84,7 @@ export class ProductImagesService {
 
       if (!image) {
          throw new NotFoundException(
-            'Product image not found',
+            'Burger image not found',
          );
       }
 
@@ -98,7 +114,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image updated successfully',
+            'Burger image updated successfully',
 
          data: image,
       };
@@ -115,7 +131,7 @@ export class ProductImagesService {
 
       return {
          message:
-            'Product image deleted successfully',
+            'Burger image deleted successfully',
       };
    }
 }

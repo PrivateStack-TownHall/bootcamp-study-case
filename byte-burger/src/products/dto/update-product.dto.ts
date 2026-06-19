@@ -1,3 +1,5 @@
+// update-product.dto.ts
+
 import {
    ApiPropertyOptional,
 } from '@nestjs/swagger';
@@ -16,6 +18,7 @@ import {
 export class UpdateProductDto {
    @ApiPropertyOptional({
       example: 1,
+      description: 'Burger category id',
    })
    @IsOptional()
    @Type(() => Number)
@@ -23,21 +26,22 @@ export class UpdateProductDto {
    categoryId?: number;
 
    @ApiPropertyOptional({
-      example: 'Espresso',
+      example: 'Double Cheese Burger',
    })
    @IsOptional()
    @IsString()
    name?: string;
 
    @ApiPropertyOptional({
-      example: 'Strong espresso shot',
+      example:
+         'Juicy beef burger with double cheddar cheese',
    })
    @IsOptional()
    @IsString()
    description?: string;
 
    @ApiPropertyOptional({
-      example: 25000,
+      example: 55000,
    })
    @IsOptional()
    @Type(() => Number)
