@@ -1,121 +1,111 @@
-import {
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 
 import { CreateProductImageDto } from './dto/create-product-image.dto';
 import { UpdateProductImageDto } from './dto/update-product-image.dto';
+import { AppType } from '@prisma/client';
 
 @Injectable()
 export class ProductImagesService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(
-      dto: CreateProductImageDto,
-   ) {
-      const image =
-         await this.prisma.productImage.create({
-            data: {
-               productId: dto.productId,
-               imageUrl: dto.imageUrl,
-               sortOrder:
-                  dto.sortOrder ?? 0,
-            },
+  async create(dto: CreateProductImageDto) {
+    const image = await this.prisma.productImage.create({
+      data: {
+        productId: dto.productId,
+        imageUrl: dto.imageUrl,
+        sortOrder: dto.sortOrder ?? 0,
+      },
 
-            include: {
-               product: true,
-            },
-         });
+      include: {
+        product: true,
+      },
+    });
 
-      return {
-         message:
-            'Inventory image created successfully',
+    return {
+      message: 'Inventory image created successfully',
 
-         data: image,
-      };
-   }
+      data: image,
+    };
+  }
 
-   async findAll() {
-      return {
-         data:
-            await this.prisma.productImage.findMany({
-               include: {
-                  product: true,
-               },
+  async findAll() {
+    return {
+      data: await this.prisma.productImage.findMany({
+        where: {
+          product: {
+            appType: AppType.MART,
+          },
+        },
 
-               orderBy: {
-                  sortOrder: 'asc',
-               },
-            }),
-      };
-   }
+        include: {
+          product: true,
+        },
 
-   async findOne(id: number) {
-      const image =
-         await this.prisma.productImage.findUnique({
-            where: {
-               id,
-            },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      }),
+    };
+  }
 
-            include: {
-               product: true,
-            },
-         });
+  async findOne(id: number) {
+    const image = await this.prisma.productImage.findFirst({
+      where: {
+        id,
+        product: {
+          appType: AppType.MART,
+        },
+      },
 
-      if (!image) {
-         throw new NotFoundException(
-            'Product image not found',
-         );
-      }
+      include: {
+        product: true,
+      },
+    });
 
-      return {
-         data: image,
-      };
-   }
+    if (!image) {
+      throw new NotFoundException('Product image not found');
+    }
 
-   async update(
-      id: number,
-      dto: UpdateProductImageDto,
-   ) {
-      await this.findOne(id);
+    return {
+      data: image,
+    };
+  }
 
-      const image =
-         await this.prisma.productImage.update({
-            where: {
-               id,
-            },
+  async update(id: number, dto: UpdateProductImageDto) {
+    await this.findOne(id);
 
-            data: dto,
+    const image = await this.prisma.productImage.update({
+      where: {
+        id,
+      },
 
-            include: {
-               product: true,
-            },
-         });
+      data: dto,
 
-      return {
-         message:
-            'Inventory image updated successfully',
+      include: {
+        product: true,
+      },
+    });
 
-         data: image,
-      };
-   }
+    return {
+      message: 'Inventory image updated successfully',
 
-   async remove(id: number) {
-      await this.findOne(id);
+      data: image,
+    };
+  }
 
-      await this.prisma.productImage.delete({
-         where: {
-            id,
-         },
-      });
+  async remove(id: number) {
+    await this.findOne(id);
 
-      return {
-         message:
-            'Inventory image deleted successfully',
-      };
-   }
+    await this.prisma.productImage.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {
+      message: 'Inventory image deleted successfully',
+    };
+  }
 }

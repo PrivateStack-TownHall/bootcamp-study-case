@@ -4,10 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import {
-  OrderStatus,
-  Prisma,
-} from '@prisma/client';
+import { AppType, OrderStatus, Prisma } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -19,207 +16,197 @@ export class OrdersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditLogsService: AuditLogsService,
-  ) { }
+  ) {}
 
   async checkout(userId: number) {
-    const cartItems =
-      await this.prisma.cartItem.findMany({
-        where: {
-          userId,
-        },
+    const cartItems = await this.prisma.cartItem.findMany({
+      where: {
+        userId,
 
-        include: {
-          product: true,
+        product: {
+          appType: AppType.ECOMMERCE,
         },
-      });
+      },
+
+      include: {
+        product: true,
+      },
+    });
 
     if (!cartItems.length) {
-      throw new BadRequestException(
-        'Cart is empty',
-      );
+      throw new BadRequestException('Cart is empty');
     }
 
     let totalAmount = 0;
 
     for (const item of cartItems) {
-      if (
-        item.product.stock <
-        item.quantity
-      ) {
+      if (item.product.stock < item.quantity) {
         throw new BadRequestException(
           `${item.product.name} stock is insufficient`,
         );
       }
 
-      totalAmount +=
-        Number(item.product.price) *
-        item.quantity;
+      totalAmount += Number(item.product.price) * item.quantity;
     }
 
     const orderNumber = `KB-${Date.now()}`;
 
-    const result =
-      await this.prisma.$transaction(
-        async (tx: Prisma.TransactionClient) => {
-          const order =
-            await tx.order.create({
-              data: {
-                userId,
-                orderNumber,
-                totalAmount,
-                status:
-                  OrderStatus.PENDING,
-              },
-            });
-
-          for (const item of cartItems) {
-            const price = Number(
-              item.product.price,
-            );
-
-            await tx.orderItem.create({
-              data: {
-                orderId: order.id,
-                productId:
-                  item.productId,
-                productName:
-                  item.product.name,
-                price,
-                quantity:
-                  item.quantity,
-                subtotal:
-                  price *
-                  item.quantity,
-              },
-            });
-
-            await tx.product.update({
-              where: {
-                id: item.productId,
-              },
-              data: {
-                stock: {
-                  decrement:
-                    item.quantity,
-                },
-              },
-            });
-          }
-
-          await tx.orderStatusHistory.create(
-            {
-              data: {
-                orderId: order.id,
-                status:
-                  OrderStatus.PENDING,
-                notes:
-                  'Order created',
-              },
-            },
-          );
-
-          await tx.cartItem.deleteMany({
-            where: {
-              userId,
-            },
-          });
-
-          await this.auditLogsService.create({
+    const result = await this.prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const order = await tx.order.create({
+          data: {
             userId,
-            action: 'CHECKOUT',
-            entity: 'Order',
-            entityId: order.id.toString(),
-            newData: order,
+            orderNumber,
+            totalAmount,
+            status: OrderStatus.PENDING,
+          },
+        });
+
+        for (const item of cartItems) {
+          const price = Number(item.product.price);
+
+          await tx.orderItem.create({
+            data: {
+              orderId: order.id,
+              productId: item.productId,
+              productName: item.product.name,
+              price,
+              quantity: item.quantity,
+              subtotal: price * item.quantity,
+            },
           });
 
-          return order;
-        },
-      );
+          await tx.product.update({
+            where: {
+              id: item.productId,
+            },
+            data: {
+              stock: {
+                decrement: item.quantity,
+              },
+            },
+          });
+        }
+
+        await tx.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            status: OrderStatus.PENDING,
+            notes: 'Order created',
+          },
+        });
+
+        await tx.cartItem.deleteMany({
+          where: {
+            userId,
+            product: {
+              appType: AppType.ECOMMERCE,
+            },
+          },
+        });
+
+        await this.auditLogsService.create({
+          userId,
+          action: 'CHECKOUT',
+          entity: 'Order',
+          entityId: order.id.toString(),
+          newData: order,
+        });
+
+        return order;
+      },
+    );
 
     return {
-      message:
-        'Checkout successful',
+      message: 'Checkout successful',
       data: result,
     };
   }
 
   async findAll(userId: number) {
-    const orders =
-      await this.prisma.order.findMany({
-        where: {
-          userId,
-        },
+    const orders = await this.prisma.order.findMany({
+      where: {
+        userId,
 
-        include: {
-          items: true,
-          payments: true,
-          histories: true,
+        items: {
+          some: {
+            product: {
+              appType: AppType.ECOMMERCE,
+            },
+          },
         },
+      },
 
-        orderBy: {
-          id: 'desc',
-        },
-      });
+      include: {
+        items: true,
+        payments: true,
+        histories: true,
+      },
+
+      orderBy: {
+        id: 'desc',
+      },
+    });
 
     return {
       data: orders.map((order) => ({
         ...order,
-        totalAmount: Number(
-          order.totalAmount,
-        ),
+        totalAmount: Number(order.totalAmount),
       })),
     };
   }
 
-  async findOne(
-    id: number,
-    userId: number,
-  ) {
-    const order =
-      await this.prisma.order.findFirst({
-        where: {
-          id,
-          userId,
-        },
+  async findOne(id: number, userId: number) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id,
+        userId,
 
-        include: {
-          items: true,
-          payments: true,
-          histories: true,
+        items: {
+          some: {
+            product: {
+              appType: AppType.ECOMMERCE,
+            },
+          },
         },
-      });
+      },
+
+      include: {
+        items: true,
+        payments: true,
+        histories: true,
+      },
+    });
 
     if (!order) {
-      throw new NotFoundException(
-        'Order not found',
-      );
+      throw new NotFoundException('Order not found');
     }
 
     return {
       data: {
         ...order,
-        totalAmount: Number(
-          order.totalAmount,
-        ),
+        totalAmount: Number(order.totalAmount),
       },
     };
   }
 
-  async updateStatus(
-    id: number,
-    dto: UpdateOrderStatusDto,
-  ) {
-    const order =
-      await this.prisma.order.findUnique({
-        where: {
-          id,
+  async updateStatus(id: number, dto: UpdateOrderStatusDto) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id,
+
+        items: {
+          some: {
+            product: {
+              appType: AppType.ECOMMERCE,
+            },
+          },
         },
-      });
+      },
+    });
 
     if (!order) {
-      throw new NotFoundException(
-        'Order not found',
-      );
+      throw new NotFoundException('Order not found');
     }
 
     await this.prisma.order.update({
@@ -232,15 +219,13 @@ export class OrdersService {
       },
     });
 
-    await this.prisma.orderStatusHistory.create(
-      {
-        data: {
-          orderId: id,
-          status: dto.status,
-          notes: dto.notes,
-        },
+    await this.prisma.orderStatusHistory.create({
+      data: {
+        orderId: id,
+        status: dto.status,
+        notes: dto.notes,
       },
-    );
+    });
 
     await this.auditLogsService.create({
       userId: order.userId,
@@ -258,8 +243,7 @@ export class OrdersService {
     });
 
     return {
-      message:
-        'Order status updated successfully',
+      message: 'Order status updated successfully',
     };
   }
 }

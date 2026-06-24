@@ -1,109 +1,105 @@
 import {
-   BadRequestException,
-   Injectable,
-   NotFoundException,
+  BadRequestException,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
+
+import { AppType } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(
-      userId: number,
-      productId: number,
-   ) {
-      const favorite =
-         await this.prisma.favorite.findFirst({
-            where: {
-               userId,
-               productId,
+  async create(userId: number, productId: number) {
+    const favorite = await this.prisma.favorite.findFirst({
+      where: {
+        userId,
+        productId,
+
+        product: {
+          appType: AppType.COFFEE,
+        },
+      },
+    });
+
+    if (favorite) {
+      throw new BadRequestException('Product already in favorites');
+    }
+
+    return {
+      message: 'Added to favorites successfully',
+
+      data: await this.prisma.favorite.create({
+        data: {
+          userId,
+          productId,
+        },
+
+        include: {
+          product: {
+            include: {
+              category: true,
+              images: true,
             },
-         });
+          },
+        },
+      }),
+    };
+  }
 
-      if (favorite) {
-         throw new BadRequestException(
-            'Product already in favorites',
-         );
-      }
+  async findAll(userId: number) {
+    return {
+      data: await this.prisma.favorite.findMany({
+        where: {
+          userId,
 
-      return {
-         message:
-            'Added to favorites successfully',
+          product: {
+            appType: AppType.COFFEE,
+          },
+        },
 
-         data:
-            await this.prisma.favorite.create({
-               data: {
-                  userId,
-                  productId,
-               },
-
-               include: {
-                  product: {
-                     include: {
-                        category: true,
-                        images: true,
-                     },
-                  },
-               },
-            }),
-      };
-   }
-
-   async findAll(userId: number) {
-      return {
-         data:
-            await this.prisma.favorite.findMany({
-               where: {
-                  userId,
-               },
-
-               include: {
-                  product: {
-                     include: {
-                        category: true,
-                        images: true,
-                     },
-                  },
-               },
-
-               orderBy: {
-                  id: 'desc',
-               },
-            }),
-      };
-   }
-
-   async remove(
-      id: number,
-      userId: number,
-   ) {
-      const favorite =
-         await this.prisma.favorite.findFirst({
-            where: {
-               id,
-               userId,
+        include: {
+          product: {
+            include: {
+              category: true,
+              images: true,
             },
-         });
+          },
+        },
 
-      if (!favorite) {
-         throw new NotFoundException(
-            'Favorite not found',
-         );
-      }
+        orderBy: {
+          id: 'desc',
+        },
+      }),
+    };
+  }
 
-      await this.prisma.favorite.delete({
-         where: {
-            id,
-         },
-      });
+  async remove(id: number, userId: number) {
+    const favorite = await this.prisma.favorite.findFirst({
+      where: {
+        id,
+        userId,
 
-      return {
-         message:
-            'Favorite removed successfully',
-      };
-   }
+        product: {
+          appType: AppType.COFFEE,
+        },
+      },
+    });
+
+    if (!favorite) {
+      throw new NotFoundException('Favorite not found');
+    }
+
+    await this.prisma.favorite.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {
+      message: 'Favorite removed successfully',
+    };
+  }
 }

@@ -4,10 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import {
-  OrderStatus,
-  PaymentStatus,
-} from '@prisma/client';
+import { AppType, OrderStatus, PaymentStatus } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -20,51 +17,59 @@ export class PaymentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditLogsService: AuditLogsService,
-  ) { }
+  ) {}
 
-  async create(
-    userId: number,
-    dto: CreatePaymentDto,
-  ) {
-    const order =
-      await this.prisma.order.findFirst({
-        where: {
-          id: dto.orderId,
-          userId,
+  async create(userId: number, dto: CreatePaymentDto) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: dto.orderId,
+        userId,
+
+        items: {
+          some: {
+            product: {
+              appType: AppType.RESTAURANT,
+            },
+          },
         },
-      });
+      },
+    });
 
     if (!order) {
-      throw new NotFoundException(
-        'Order not found',
-      );
+      throw new NotFoundException('Order not found');
     }
 
-    const existingPayment =
-      await this.prisma.payment.findFirst({
-        where: {
-          orderId: dto.orderId,
+    const existingPayment = await this.prisma.payment.findFirst({
+      where: {
+        orderId: dto.orderId,
+
+        order: {
+          items: {
+            some: {
+              product: {
+                appType: AppType.RESTAURANT,
+              },
+            },
+          },
         },
-      });
+      },
+    });
 
     if (existingPayment) {
-      throw new BadRequestException(
-        'Payment already exists',
-      );
+      throw new BadRequestException('Payment already exists');
     }
 
-    const payment =
-      await this.prisma.payment.create({
-        data: {
-          orderId: dto.orderId,
-          amount: order.totalAmount,
-          method: dto.method,
-        },
+    const payment = await this.prisma.payment.create({
+      data: {
+        orderId: dto.orderId,
+        amount: order.totalAmount,
+        method: dto.method,
+      },
 
-        include: {
-          order: true,
-        },
-      });
+      include: {
+        order: true,
+      },
+    });
 
     await this.auditLogsService.create({
       userId: payment.order.userId,
@@ -79,129 +84,122 @@ export class PaymentsService {
     });
 
     return {
-      message:
-        'Payment created successfully',
+      message: 'Payment created successfully',
 
       data: {
         ...payment,
-        amount: Number(
-          payment.amount,
-        ),
+        amount: Number(payment.amount),
       },
     };
   }
 
   async findAll(userId: number) {
-    const payments =
-      await this.prisma.payment.findMany({
-        where: {
-          order: {
-            userId,
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        order: {
+          userId,
+          items: {
+            some: {
+              product: {
+                appType: AppType.COFFEE,
+              },
+            },
           },
         },
+      },
 
-        include: {
-          order: true,
-        },
+      include: {
+        order: true,
+      },
 
-        orderBy: {
-          id: 'desc',
-        },
-      });
+      orderBy: {
+        id: 'desc',
+      },
+    });
 
     return {
-      data: payments.map(
-        (payment) => ({
-          ...payment,
-          amount: Number(
-            payment.amount,
-          ),
-        }),
-      ),
+      data: payments.map((payment) => ({
+        ...payment,
+        amount: Number(payment.amount),
+      })),
     };
   }
 
-  async findOne(
-    id: number,
-    userId: number,
-  ) {
-    const payment =
-      await this.prisma.payment.findFirst({
-        where: {
-          id,
+  async findOne(id: number, userId: number) {
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        id,
 
-          order: {
-            userId,
+        order: {
+          userId,
+          items: {
+            some: {
+              product: {
+                appType: AppType.RESTAURANT,
+              },
+            },
           },
         },
+      },
 
-        include: {
-          order: true,
-        },
-      });
+      include: {
+        order: true,
+      },
+    });
 
     if (!payment) {
-      throw new NotFoundException(
-        'Payment not found',
-      );
+      throw new NotFoundException('Payment not found');
     }
 
     return {
       data: {
         ...payment,
-        amount: Number(
-          payment.amount,
-        ),
+        amount: Number(payment.amount),
       },
     };
   }
 
-  async updateStatus(
-    id: number,
-    dto: UpdatePaymentStatusDto,
-  ) {
-    const payment =
-      await this.prisma.payment.findUnique({
-        where: {
-          id,
-        },
+  async updateStatus(id: number, dto: UpdatePaymentStatusDto) {
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        id,
 
-        include: {
-          order: true,
+        order: {
+          items: {
+            some: {
+              product: {
+                appType: AppType.RESTAURANT,
+              },
+            },
+          },
         },
-      });
+      },
+
+      include: {
+        order: true,
+      },
+    });
 
     if (!payment) {
-      throw new NotFoundException(
-        'Payment not found',
-      );
+      throw new NotFoundException('Payment not found');
     }
 
-    const updatedPayment =
-      await this.prisma.payment.update({
-        where: {
-          id,
-        },
+    const updatedPayment = await this.prisma.payment.update({
+      where: {
+        id,
+      },
 
-        data: {
-          status: dto.status,
+      data: {
+        status: dto.status,
+        paidAt: dto.status === PaymentStatus.SUCCESS ? new Date() : null,
+      },
 
-          paidAt:
-            dto.status ===
-              PaymentStatus.SUCCESS
-              ? new Date()
-              : null,
-        },
+      include: {
+        order: true,
+      },
+    });
 
-        include: {
-          order: true,
-        },
-      });
-
-    if (
-      dto.status ===
-      PaymentStatus.SUCCESS
-    ) {
+    if (dto.status === PaymentStatus.SUCCESS) {
       await this.prisma.order.update({
         where: {
           id: payment.orderId,
@@ -212,57 +210,36 @@ export class PaymentsService {
         },
       });
 
-      await this.prisma.orderStatusHistory.create(
-        {
-          data: {
-            orderId:
-              payment.orderId,
-
-            status:
-              OrderStatus.PAID,
-
-            notes:
-              'Payment successful',
-          },
+      await this.prisma.orderStatusHistory.create({
+        data: {
+          orderId: payment.orderId,
+          status: OrderStatus.PAID,
+          notes: 'Payment successful',
         },
-      );
+      });
       await this.auditLogsService.create({
         userId: payment.order.userId,
-
         action: 'PAYMENT_SUCCESS',
-
         entity: 'Payment',
-
         entityId: payment.id.toString(),
-
         newData: updatedPayment,
       });
     }
-    if (
-      dto.status ===
-      PaymentStatus.FAILED
-    ) {
+    if (dto.status === PaymentStatus.FAILED) {
       await this.auditLogsService.create({
         userId: payment.order.userId,
-
         action: 'PAYMENT_FAILED',
-
         entity: 'Payment',
-
         entityId: payment.id.toString(),
-
         newData: updatedPayment,
       });
     }
     return {
-      message:
-        'Payment status updated successfully',
+      message: 'Payment status updated successfully',
 
       data: {
         ...updatedPayment,
-        amount: Number(
-          updatedPayment.amount,
-        ),
+        amount: Number(updatedPayment.amount),
       },
     };
   }

@@ -1,7 +1,6 @@
-import {
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { AppType } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,112 +9,105 @@ import { UpdateProductImageDto } from './dto/update-product-image.dto';
 
 @Injectable()
 export class ProductImagesService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(
-      dto: CreateProductImageDto,
-   ) {
-      const image =
-         await this.prisma.productImage.create({
-            data: {
-               productId: dto.productId,
-               imageUrl: dto.imageUrl,
-               sortOrder:
-                  dto.sortOrder ?? 0,
-            },
+  async create(dto: CreateProductImageDto) {
+    const image = await this.prisma.productImage.create({
+      data: {
+        productId: dto.productId,
+        imageUrl: dto.imageUrl,
+        sortOrder: dto.sortOrder ?? 0,
+      },
 
-            include: {
-               product: true,
-            },
-         });
+      include: {
+        product: true,
+      },
+    });
 
-      return {
-         message:
-            'Coffee image created successfully',
+    return {
+      message: 'Coffee image created successfully',
 
-         data: image,
-      };
-   }
+      data: image,
+    };
+  }
 
-   async findAll() {
-      return {
-         data:
-            await this.prisma.productImage.findMany({
-               include: {
-                  product: true,
-               },
+  async findAll() {
+    return {
+      data: await this.prisma.productImage.findMany({
+        where: {
+          product: {
+            appType: AppType.COFFEE,
+          },
+        },
 
-               orderBy: {
-                  sortOrder: 'asc',
-               },
-            }),
-      };
-   }
+        include: {
+          product: true,
+        },
 
-   async findOne(id: number) {
-      const image =
-         await this.prisma.productImage.findUnique({
-            where: {
-               id,
-            },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      }),
+    };
+  }
 
-            include: {
-               product: true,
-            },
-         });
+  async findOne(id: number) {
+    const image = await this.prisma.productImage.findFirst({
+      where: {
+        id,
 
-      if (!image) {
-         throw new NotFoundException(
-            'Coffee image not found',
-         );
-      }
+        product: {
+          appType: AppType.COFFEE,
+        },
+      },
 
-      return {
-         data: image,
-      };
-   }
+      include: {
+        product: true,
+      },
+    });
 
-   async update(
-      id: number,
-      dto: UpdateProductImageDto,
-   ) {
-      await this.findOne(id);
+    if (!image) {
+      throw new NotFoundException('Coffee image not found');
+    }
 
-      const image =
-         await this.prisma.productImage.update({
-            where: {
-               id,
-            },
+    return {
+      data: image,
+    };
+  }
 
-            data: dto,
+  async update(id: number, dto: UpdateProductImageDto) {
+    await this.findOne(id);
 
-            include: {
-               product: true,
-            },
-         });
+    const image = await this.prisma.productImage.update({
+      where: {
+        id,
+      },
 
-      return {
-         message:
-            'Coffee image updated successfully',
+      data: dto,
 
-         data: image,
-      };
-   }
+      include: {
+        product: true,
+      },
+    });
 
-   async remove(id: number) {
-      await this.findOne(id);
+    return {
+      message: 'Coffee image updated successfully',
 
-      await this.prisma.productImage.delete({
-         where: {
-            id,
-         },
-      });
+      data: image,
+    };
+  }
 
-      return {
-         message:
-            'Coffee image deleted successfully',
-      };
-   }
+  async remove(id: number) {
+    await this.findOne(id);
+
+    await this.prisma.productImage.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {
+      message: 'Coffee image deleted successfully',
+    };
+  }
 }
