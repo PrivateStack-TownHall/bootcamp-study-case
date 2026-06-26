@@ -49,7 +49,7 @@ export class OrdersService {
       totalAmount += Number(item.product.price) * item.quantity;
     }
 
-    const orderNumber = `KB-${Date.now()}`;
+    const orderNumber = `CK-${Date.now()}`;
 
     const result = await this.prisma.$transaction(
       async (tx: Prisma.TransactionClient) => {

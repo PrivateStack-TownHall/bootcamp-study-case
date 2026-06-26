@@ -3,12 +3,13 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): { message: string } {
+  getHello(): { message: string; feature: string } {
     return {
       message: 'Kings Brew API',
+      feature: 'Observability api public',
     };
   }
 }
