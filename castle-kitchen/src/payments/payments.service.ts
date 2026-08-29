@@ -101,7 +101,7 @@ export class PaymentsService {
           items: {
             some: {
               product: {
-                appType: AppType.COFFEE,
+                appType: AppType.RESTAURANT,
               },
             },
           },
