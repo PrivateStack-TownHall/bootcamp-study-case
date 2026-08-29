@@ -1,7 +1,4 @@
-import {
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -12,73 +9,83 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-   constructor(
-      private readonly prisma: PrismaService,
-   ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-   async create(
-      dto: CreateCategoryDto,
-   ) {
-      return this.prisma.category.create({
-         data: {
-            appType: AppType.RESTAURANT,
-            name: dto.name,
-            description: dto.description,
-         },
-      });
-   }
+  async create(dto: CreateCategoryDto) {
+    const category = await this.prisma.category.create({
+      data: {
+        appType: AppType.RESTAURANT,
+        name: dto.name,
+        description: dto.description,
+      },
+    });
 
-   async findAll() {
-      return this.prisma.category.findMany({
-         where: {
-            appType: AppType.RESTAURANT,
-         },
-         orderBy: {
-            id: 'desc',
-         },
-      });
-   }
+    return {
+      message: 'Menu category created successfully',
+      data: category,
+    };
+  }
 
-   async findOne(id: number) {
-      const category =
-         await this.prisma.category.findUnique({
-            where: {
-               id,
-               appType: AppType.RESTAURANT,
-            },
-         });
+  async findAll() {
+    const categories = await this.prisma.category.findMany({
+      where: {
+        appType: AppType.RESTAURANT,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
 
-      if (!category) {
-         throw new NotFoundException(
-            'Category not found',
-         );
-      }
+    return {
+      data: categories,
+    };
+  }
 
-      return category;
-   }
+  async findOne(id: number) {
+    const category = await this.prisma.category.findUnique({
+      where: {
+        id,
+        appType: AppType.RESTAURANT,
+      },
+    });
 
-   async update(
-      id: number,
-      dto: UpdateCategoryDto,
-   ) {
-      await this.findOne(id);
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
 
-      return this.prisma.category.update({
-         where: {
-            id,
-            appType: AppType.RESTAURANT,
-         },
-         data: dto,
-      });
-   }
+    return {
+      data: category,
+    };
+  }
 
-   async remove(id: number) {
-      await this.findOne(id);
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.findOne(id);
 
-      return this.prisma.category.delete({
-         where: {
-            id,
-         },
-      });
-   }
+    const category = await this.prisma.category.update({
+      where: {
+        id,
+        appType: AppType.RESTAURANT,
+      },
+      data: dto,
+    });
+
+    return {
+      message: 'Menu category updated successfully',
+      data: category,
+    };
+  }
+
+  async remove(id: number) {
+    await this.findOne(id);
+
+    await this.prisma.category.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {
+      message: 'Menu category deleted successfully',
+    };
+  }
 }
