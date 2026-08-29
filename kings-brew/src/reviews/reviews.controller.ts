@@ -11,12 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -38,15 +33,12 @@ import {
 @ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
-  constructor(
-    private readonly reviewsService: ReviewsService,
-  ) { }
+  constructor(private readonly reviewsService: ReviewsService) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get Reviews',
-    description:
-      'Retrieve all coffee reviews',
+    description: 'Retrieve all coffee reviews',
   })
   @SwaggerSuccess({
     data: [
@@ -56,8 +48,7 @@ export class ReviewsController {
         productId: 1,
         rating: 5,
         comment: 'Excellent coffee',
-        createdAt:
-          '2026-06-17T00:00:00.000Z',
+        createdAt: '2026-06-17T00:00:00.000Z',
       },
     ],
   })
@@ -67,10 +58,8 @@ export class ReviewsController {
 
   @Get('product/:productId')
   @ApiOperation({
-    summary:
-      'Get Reviews By Coffee',
-    description:
-      'Retrieve reviews by coffee id',
+    summary: 'Get Reviews By Coffee',
+    description: 'Retrieve reviews by coffee id',
   })
   @SwaggerSuccess({
     data: [
@@ -83,19 +72,12 @@ export class ReviewsController {
       },
     ],
   })
-  @SwaggerNotFound(
-    'Coffee not found',
-  )
+  @SwaggerNotFound('Coffee not found')
   findByProduct(
-    @Param(
-      'productId',
-      ParseIntPipe,
-    )
+    @Param('productId', ParseIntPipe)
     productId: number,
   ) {
-    return this.reviewsService.findByProduct(
-      productId,
-    );
+    return this.reviewsService.findByProduct(productId);
   }
 
   @Post()
@@ -103,15 +85,13 @@ export class ReviewsController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Create Review',
-    description:
-      'Create review for coffee',
+    description: 'Create review for coffee',
   })
   @ApiBody({
     type: CreateReviewDto,
   })
   @SwaggerCreated({
-    message:
-      'Review created successfully',
+    message: 'Review created successfully',
     data: {
       id: 1,
       userId: 1,
@@ -120,18 +100,10 @@ export class ReviewsController {
       comment: 'Excellent coffee',
     },
   })
-  @SwaggerBadRequest(
-    'Review already exists',
-  )
+  @SwaggerBadRequest('Review already exists')
   @SwaggerUnauthorized()
-  create(
-    @Req() req: AuthRequest,
-    @Body() dto: CreateReviewDto,
-  ) {
-    return this.reviewsService.create(
-      req.user.id,
-      dto,
-    );
+  create(@Req() req: AuthRequest, @Body() dto: CreateReviewDto) {
+    return this.reviewsService.create(req.user.id, dto);
   }
 
   @Patch(':id')
@@ -139,43 +111,31 @@ export class ReviewsController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Update Review',
-    description:
-      'Update review by id',
+    description: 'Update review by id',
   })
   @ApiBody({
     type: UpdateReviewDto,
   })
   @SwaggerSuccess({
-    message:
-      'Review updated successfully',
+    message: 'Review updated successfully',
     data: {
       id: 1,
       rating: 4,
-      comment:
-        'Good coffee, updated review',
+      comment: 'Good coffee, updated review',
     },
   })
-  @SwaggerNotFound(
-    'Review not found',
-  )
+  @SwaggerNotFound('Review not found')
   @SwaggerUnauthorized()
   update(
     @Req() req: AuthRequest,
 
-    @Param(
-      'id',
-      ParseIntPipe,
-    )
+    @Param('id', ParseIntPipe)
     id: number,
 
     @Body()
     dto: UpdateReviewDto,
   ) {
-    return this.reviewsService.update(
-      id,
-      req.user.id,
-      dto,
-    );
+    return this.reviewsService.update(id, req.user.id, dto);
   }
 
   @Delete(':id')
@@ -183,29 +143,19 @@ export class ReviewsController {
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete Review',
-    description:
-      'Delete review by id',
+    description: 'Delete review by id',
   })
   @SwaggerSuccess({
-    message:
-      'Review deleted successfully',
+    message: 'Review deleted successfully',
   })
-  @SwaggerNotFound(
-    'Review not found',
-  )
+  @SwaggerNotFound('Review not found')
   @SwaggerUnauthorized()
   remove(
     @Req() req: AuthRequest,
 
-    @Param(
-      'id',
-      ParseIntPipe,
-    )
+    @Param('id', ParseIntPipe)
     id: number,
   ) {
-    return this.reviewsService.remove(
-      id,
-      req.user.id,
-    );
+    return this.reviewsService.remove(id, req.user.id);
   }
 }

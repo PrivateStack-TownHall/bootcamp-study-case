@@ -9,29 +9,27 @@ import { seedReviews } from './seeds/reviews.seed';
 const prisma = new PrismaClient();
 
 async function main() {
-   console.log('🌱 Start Seeding...');
+  console.log('🌱 Start Seeding...');
 
-   await seedUsers(prisma);
+  await seedUsers(prisma);
 
-   await seedCategories(prisma);
+  await seedCategories(prisma);
 
-   await seedCoffees(prisma);
+  await seedCoffees(prisma);
 
-   await seedCoffeeImages(prisma);
+  await seedCoffeeImages(prisma);
 
-   await seedReviews(prisma);
+  await seedReviews(prisma);
 
-   console.log(
-      '✅ Seeding Completed',
-   );
+  console.log('✅ Seeding Completed');
 }
 
 main()
-   .catch((error) => {
-      console.error(error);
+  .catch((error) => {
+    console.error(error);
 
-      process.exit(1);
-   })
-   .finally(async () => {
-      await prisma.$disconnect();
-   });
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
