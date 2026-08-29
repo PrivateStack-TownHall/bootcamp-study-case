@@ -12,17 +12,22 @@ export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateCategoryDto) {
-    return this.prisma.category.create({
+    const category = await this.prisma.category.create({
       data: {
         appType: AppType.BURGER,
         name: dto.name,
         description: dto.description,
       },
     });
+
+    return {
+      message: 'Burger category created successfully',
+      data: category,
+    };
   }
 
   async findAll() {
-    return this.prisma.category.findMany({
+    const categories = await this.prisma.category.findMany({
       where: {
         appType: AppType.BURGER,
       },
@@ -31,6 +36,10 @@ export class CategoriesService {
         id: 'desc',
       },
     });
+
+    return {
+      data: categories,
+    };
   }
 
   async findOne(id: number) {
@@ -45,28 +54,39 @@ export class CategoriesService {
       throw new NotFoundException('Burger category not found');
     }
 
-    return category;
+    return {
+      data: category,
+    };
   }
 
   async update(id: number, dto: UpdateCategoryDto) {
     await this.findOne(id);
 
-    return this.prisma.category.update({
+    const category = await this.prisma.category.update({
       where: {
         id,
         appType: AppType.BURGER,
       },
       data: dto,
     });
+
+    return {
+      message: 'Burger category updated successfully',
+      data: category,
+    };
   }
 
   async remove(id: number) {
     await this.findOne(id);
 
-    return this.prisma.category.delete({
+    await this.prisma.category.delete({
       where: {
         id,
       },
     });
+
+    return {
+      message: 'Burger category deleted successfully',
+    };
   }
 }
