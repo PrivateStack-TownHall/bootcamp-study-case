@@ -29,7 +29,7 @@ export class FavoritesService {
     }
 
     return {
-      message: 'Added to favorites successfully',
+      message: 'Favorite added successfully',
 
       data: await this.prisma.favorite.create({
         data: {
