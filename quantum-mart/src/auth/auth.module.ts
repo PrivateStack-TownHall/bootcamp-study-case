@@ -14,9 +14,7 @@ import { AuditLogsModule } from '../audit-logs/audit-logs.module';
     AuditLogsModule,
 
     JwtModule.register({
-      secret:
-        process.env.JWT_SECRET ||
-        'supersecret',
+      secret: process.env.JWT_SECRET || 'supersecret',
 
       signOptions: {
         expiresIn: 86400,
@@ -26,11 +24,8 @@ import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 
   controllers: [AuthController],
 
-  providers: [
-    AuthService,
-    JwtStrategy,
-  ],
+  providers: [AuthService, JwtStrategy],
 
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

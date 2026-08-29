@@ -12,4 +12,4 @@ import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 
   providers: [CartService],
 })
-export class CartModule { }
+export class CartModule {}
