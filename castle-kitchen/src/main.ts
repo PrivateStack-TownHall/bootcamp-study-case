@@ -1,18 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
-import {
-  SwaggerModule,
-  DocumentBuilder,
-} from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+
 async function bootstrap() {
-  const app =
-    await NestFactory.create(
-      AppModule,
-    );
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors();
 
@@ -24,39 +21,43 @@ async function bootstrap() {
     }),
   );
 
-  const config =
-    new DocumentBuilder()
-      .setTitle('Kings Brew API')
-      .setDescription(
-        'Coffee Shop Backend API',
-      )
-      .setVersion('1.0')
-      .addBearerAuth()
-      .build();
+  // Ensures every response (success & error) actually matches the
+  // { success, ... } / { success: false, statusCode, message, ... } shape
+  // documented in Swagger via SwaggerSuccess/SwaggerCreated/SwaggerBadRequest/etc.
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
-  const document =
-    SwaggerModule.createDocument(
-      app,
-      config,
-    );
+  const config = new DocumentBuilder()
+    .setTitle('Castle Kitchen API')
+    .setDescription(
+      'Restaurant Ordering Backend API — dine-in/takeaway ordering ' +
+        'platform covering auth, categories, menu, cart, checkout, ' +
+        'orders, payments, reviews, order status tracking, and audit logging.',
+    )
+    .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description: 'Enter the JWT access token returned by /auth/login',
+    })
+    .build();
 
-  SwaggerModule.setup(
-    'api',
-    app,
-    document,
-  );
+  const document = SwaggerModule.createDocument(app, config);
 
-  await app.listen(
-    process.env.PORT ?? 3000,
-  );
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
-  console.log(
-    `Server running on http://localhost:3000`,
-  );
+  const port = process.env.PORT ?? 3000;
 
-  console.log(
-    `Swagger running on http://localhost:3000/api`,
-  );
+  await app.listen(port);
+
+  console.log(`Server running on http://localhost:${port}`);
+
+  console.log(`Swagger running on http://localhost:${port}/api`);
 }
 
-bootstrap();
+void bootstrap();
