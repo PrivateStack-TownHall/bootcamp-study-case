@@ -198,7 +198,7 @@ export class OrdersService {
         items: {
           some: {
             product: {
-              appType: AppType.COFFEE,
+              appType: AppType.RESTAURANT,
             },
           },
         },
@@ -209,7 +209,7 @@ export class OrdersService {
       throw new NotFoundException('Order not found');
     }
 
-    await this.prisma.order.update({
+    const updatedOrder = await this.prisma.order.update({
       where: {
         id,
       },
@@ -240,6 +240,12 @@ export class OrdersService {
 
     return {
       message: 'Order status updated successfully',
+
+      data: {
+        ...updatedOrder,
+
+        totalAmount: Number(updatedOrder.totalAmount),
+      },
     };
   }
 }
