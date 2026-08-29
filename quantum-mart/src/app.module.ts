@@ -12,8 +12,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
-import { OrderStatusHistoryModule } from './order-status-history/order-status-history.module'
-import { AuditLogsModule } from './audit-logs/audit-logs.module'
+import { OrderStatusHistoryModule } from './order-status-history/order-status-history.module';
+import { AuditLogsModule } from './audit-logs/audit-logs.module';
 
 @Module({
   imports: [
@@ -29,9 +29,9 @@ import { AuditLogsModule } from './audit-logs/audit-logs.module'
     OrdersModule,
     PaymentsModule,
     OrderStatusHistoryModule,
-    AuditLogsModule
+    AuditLogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
