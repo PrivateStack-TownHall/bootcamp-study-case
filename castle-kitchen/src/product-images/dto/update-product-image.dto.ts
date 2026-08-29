@@ -1,33 +1,26 @@
-import {
-   ApiPropertyOptional,
-} from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-import {
-   IsInt,
-   IsOptional,
-   IsString,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProductImageDto {
-   @ApiPropertyOptional({
-      example: 30,
-   })
-   @IsOptional()
-   @IsInt()
-   productId?: number;
+  @ApiPropertyOptional({
+    example: 30,
+  })
+  @IsOptional()
+  @IsInt()
+  productId?: number;
 
-   @ApiPropertyOptional({
-      example:
-         'https://images.unsplash.com/photo-1544025162-d76694265947',
-   })
-   @IsOptional()
-   @IsString()
-   imageUrl?: string;
+  @ApiPropertyOptional({
+    example: 'https://images.unsplash.com/photo-1544025162-d76694265947',
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 
-   @ApiPropertyOptional({
-      example: 2,
-   })
-   @IsOptional()
-   @IsInt()
-   sortOrder?: number;
+  @ApiPropertyOptional({
+    example: 2,
+  })
+  @IsOptional()
+  @IsInt()
+  sortOrder?: number;
 }
