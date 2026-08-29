@@ -4,12 +4,8 @@ import { ProductImagesController } from './product-images.controller';
 import { ProductImagesService } from './product-images.service';
 
 @Module({
-  controllers: [
-    ProductImagesController,
-  ],
+  controllers: [ProductImagesController],
 
-  providers: [
-    ProductImagesService,
-  ],
+  providers: [ProductImagesService],
 })
-export class ProductImagesModule { }
+export class ProductImagesModule {}
